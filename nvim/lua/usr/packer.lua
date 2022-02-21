@@ -92,5 +92,6 @@ require("packer").startup({
     use 'anuvyklack/hydra.nvim' -- 消除重复快捷键，可以用于调整 window 大小等
     -- use 'inkarkat/vim-mark' --- 高亮多个搜索的内容 @todo 暂时安装不上
     use 'ojroques/vim-oscyank' -- 让 nvim 在远程 server 上拷贝到本地剪切板上
+    use 'ntpeters/vim-better-whitespace' -- 显示代码行尾的空格
   end,
 })

@@ -17,7 +17,7 @@ local keymap_list = {
 
 require 'nvim-tree'.setup {
   view = {
-    side = 'right',
+    side = 'left',
     mappings = {
       custom_only = true,
       list = keymap_list
