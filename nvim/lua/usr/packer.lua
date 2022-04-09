@@ -2,28 +2,39 @@ local vim = vim
 -- ensure that packer is installed
 local install_path = vim.fn.stdpath('data') .. '/site/pack/packer/opt/packer.nvim'
 if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
-  vim.api.nvim_command('!git clone https://github.com/wbthomason/packer.nvim ' .. install_path)
-  vim.api.nvim_command('packadd packer.nvim')
+    vim.api.nvim_command('!git clone https://github.com/wbthomason/packer.nvim ' .. install_path)
+    vim.api.nvim_command('packadd packer.nvim')
 end
 vim.cmd('packadd packer.nvim')
 local packer = require 'packer'
 local util = require 'packer.util'
 packer.init({
-  package_root = util.join_paths(vim.fn.stdpath('data'), 'site', 'pack')
+    package_root = util.join_paths(vim.fn.stdpath('data'), 'site', 'pack')
 })
 
-require("packer").startup({
-  function(use)
-    use { 'lewis6991/impatient.nvim', config = [[require('impatient')]] }
-    use({ "wbthomason/packer.nvim", opt = true })
+require("packer").startup({function(use)
+    use {
+        'lewis6991/impatient.nvim',
+        config = [[require('impatient')]]
+    }
+    use({
+        "wbthomason/packer.nvim",
+        opt = true
+    })
     -- 基础
     use 'nvim-lua/plenary.nvim' -- 很多 lua 插件依赖的库
-    use { 'neoclide/coc.nvim', branch = 'release' } -- lsp
+    use {
+        'neoclide/coc.nvim',
+        branch = 'release'
+    } -- lsp
     use 'kyazdani42/nvim-web-devicons' -- 显示图标
     use 'folke/which-key.nvim' -- 用于配置和提示快捷键
     use 'tami5/sqlite.lua' -- 数据库
     -- treesitter
-    use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' } -- 基于语法树的高亮
+    use {
+        'nvim-treesitter/nvim-treesitter',
+        run = ':TSUpdate'
+    } -- 基于语法树的高亮
     use 'RRethy/nvim-treesitter-textsubjects'
     use 'nvim-treesitter/nvim-treesitter-textobjects'
     use 'lewis6991/spellsitter.nvim' -- 当检查拼写的时候，仅仅检查注释
@@ -46,16 +57,21 @@ require("packer").startup({
     use 'lewis6991/gitsigns.nvim' -- 显示改动的信息
     -- 基于 telescope 的搜索
     use 'nvim-telescope/telescope.nvim'
-    use { 'nvim-telescope/telescope-fzf-native.nvim',
-      run = 'make' } -- telescope 搜索的插件，可以提升搜索效率
+    use {
+        'nvim-telescope/telescope-fzf-native.nvim',
+        run = 'make'
+    } -- telescope 搜索的插件，可以提升搜索效率
     use 'fannheyward/telescope-coc.nvim' -- 搜索 coc 提供的符号
     use 'dhruvmanila/telescope-bookmarks.nvim' -- 搜索 bookmarks
     -- 命令执行
     use 'voldikss/vim-floaterm' -- 以悬浮窗口的形式打开终端
     use 'CRAG666/code_runner.nvim' -- 一键运行代码
     -- markdown
-    use({ "iamcco/markdown-preview.nvim", ft = "markdown",
-      run = "cd app && yarn install" }) -- 预览
+    use({
+        "iamcco/markdown-preview.nvim",
+        ft = "markdown",
+        run = "cd app && yarn install"
+    }) -- 预览
     use 'mzlogin/vim-markdown-toc' -- 自动目录生成
     use 'dhruvasagar/vim-table-mode' -- 快速编辑 markdown 的表格
     use 'crispgm/telescope-heading.nvim' -- Telescope coc 没有 outline，所以只好使用这个
@@ -74,6 +90,10 @@ require("packer").startup({
     use 'windwp/nvim-spectre' -- 媲美 vscode 的多文件替换
     -- 快速移动
     use 'ggandor/lightspeed.nvim'
+    use 'easymotion/vim-easymotion' -- 快速移动
+    -- c/c++
+    use 'jackguo380/vim-lsp-cxx-h/usr/share/code/resources/app/out/vs/code/electron-sandbox/workbench/workbench.htmlighlight' -- 为 c/cpp 提供基于 lsp 的高亮
+    use 'skywind3000/vim-cppman' -- http://cplusplus.com/ 和 http://cppreference.com/ 获取文档
     -- 书签
     use 'MattesGroeger/vim-bookmarks'
     use 'tom-anders/telescope-vim-bookmarks.nvim' -- 辅助书签的搜索
@@ -93,5 +113,6 @@ require("packer").startup({
     -- use 'inkarkat/vim-mark' --- 高亮多个搜索的内容 @todo 暂时安装不上
     use 'ojroques/vim-oscyank' -- 让 nvim 在远程 server 上拷贝到本地剪切板上
     use 'ntpeters/vim-better-whitespace' -- 显示代码行尾的空格
-  end,
-})
+    use 'andymass/vim-matchup' -- 高亮匹配的元素，例如 #if 和 #endif
+    use 'neovimhaskell/haskell-vim' -- haskell syntax highlight and smart indentation
+end})
