@@ -110,8 +110,7 @@ for s:fname in s:core_conf_files
 endfor
 
 " 设置主题，最下面的会生效
-let g:tokyonight_style = "night"
-colorscheme tokyonight
+colorscheme tokyonight-night
 " keymapping by whichkey doesn't work in neovim 0.8
 noremap <Space>bc :BDelete hidden<cr>
 
