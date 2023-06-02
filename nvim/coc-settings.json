@@ -23,6 +23,39 @@
         "lhs",
         "haskell"
       ]
+    },
+    "ccls": {
+      "command": "ccls",
+      "filetypes": [
+        "c",
+        "cpp",
+        "cuda",
+        "objc",
+        "objcpp"
+      ],
+      "rootPatterns": [
+        "compile_commands.json",
+        ".git/"
+      ],
+      "initializationOptions": {
+        "cache": {
+          "directory": ".ccls-cache"
+        },
+        "highlight": {
+          "lsRanges": true
+        },
+        "index": {
+          "threads": 0,
+        },
+        "client": {
+          "snippetSupport": true
+        },
+        "clang": {
+          "extraArgs": [
+            "-Wall"
+          ]
+        }
+      }
     }
   },
   "translator.engines": [
@@ -38,6 +71,13 @@
   "Lua.telemetry.enable": true,
   "semanticTokens.enable": true,
   "inlayHint.enable": false,
-  "clangd.path": "/usr/bin/clangd"
-
+  "clangd.path": "/usr/bin/clangd",
+  "clangd.fallbackFlags": [
+    "-Wall",
+    "-Wextra"
+  ],
+  "clangd.arguments": [
+    "-j=32"
+  ],
+  "snippets.ultisnips.pythonPrompt": false,
 }
