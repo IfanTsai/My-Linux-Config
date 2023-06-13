@@ -15,3 +15,4 @@ require('gitsigns').setup {}
 require('leap').add_default_mappings()
 require('nvim-autopairs').setup {}
 require('spellsitter').setup {}
+require('gitsigns').setup { signcolumn = false, numhl = true}

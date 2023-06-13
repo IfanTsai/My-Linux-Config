@@ -45,7 +45,7 @@
           "lsRanges": true
         },
         "index": {
-          "threads": 0,
+          "threads": 0
         },
         "client": {
           "snippetSupport": true
@@ -79,5 +79,5 @@
   "clangd.arguments": [
     "-j=32"
   ],
-  "snippets.ultisnips.pythonPrompt": false,
+  "snippets.ultisnips.pythonPrompt": false
 }
