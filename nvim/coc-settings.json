@@ -79,5 +79,7 @@
   "clangd.arguments": [
     "-j=32"
   ],
-  "snippets.ultisnips.pythonPrompt": false
+  "snippets.ultisnips.pythonPrompt": false,
+  "git.addGBlameToVirtualText": true,
+  "git.virtualTextPrefix": " •••➜  "
 }
