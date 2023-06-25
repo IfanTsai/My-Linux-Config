@@ -114,4 +114,5 @@ require("packer").startup({function(use)
     use 'jackguo380/vim-lsp-cxx-highlight' -- ccls 高亮需要
     use 'ntpeters/vim-better-whitespace' -- 显示代码行尾的空格
     use 'github/copilot.vim'
+    use  'luochen1990/rainbow' -- 高亮括号
 end})

@@ -89,6 +89,7 @@ let s:core_conf_files = [
       \ 'startify.vim',
       \ 'airline.vim',
       \ 'haskell.vim',
+      \ 'rainbow.vim',
       \ ]
 
 for s:fname in s:core_conf_files
