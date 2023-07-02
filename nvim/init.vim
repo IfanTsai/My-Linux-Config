@@ -57,8 +57,8 @@ noremap <C-h> <C-w>h
 noremap <C-j> <C-w>j
 noremap <C-k> <C-w>k
 noremap <C-l> <C-w>l
-" use ctrl+w sudo to save
-nnoremap <C-w> :w !sudo tee %<cr>
+" use ctrl+s sudo to save
+nnoremap <C-s> :w !sudo tee %<cr>
 " 一键清理代码行尾的空格
 nnoremap cc :%s/\s\+$//<cr>:let @/=''<CR>
 
@@ -66,9 +66,12 @@ nnoremap cc :%s/\s\+$//<cr>:let @/=''<CR>
 noremap <leader>q q
 
 " 访问系统剪切板
-map <leader>y "+y
-map <leader>p "+p
-map <leader>d "+d
+"map <leader>y "+y
+"map <leader>p "+p
+"map <leader>d "+d
+
+" always copy and paster use system clipboard
+set clipboard+=unnamedplus
 
 " 让远程的 server 内容拷贝到系统剪切板中，具体参考 https://github.com/ojroques/vim-oscyank
 autocmd TextYankPost * if v:event.operator is 'y' && v:event.regname is '+' | execute 'OSCYankReg +' | endif

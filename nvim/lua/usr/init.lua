@@ -1,3 +1,4 @@
+require 'usr.autocmd'
 require 'usr.packer'
 require 'usr.bufferline'
 require 'usr.code_runner'
