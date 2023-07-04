@@ -41,6 +41,7 @@ au FocusGained,BufEnter * :checktime
 " 当失去焦点或者离开当前的 buffer 的时候保存
 set autowrite
 autocmd FocusLost,BufLeave * silent! update
+
 " 在 terminal 中也是使用 esc 来进入 normal 模式
 tnoremap  <Esc>  <C-\><C-n>
 " 映射 leader 键为 ,
@@ -74,13 +75,20 @@ noremap <leader>q q
 set clipboard+=unnamedplus
 
 " 让远程的 server 内容拷贝到系统剪切板中，具体参考 https://github.com/ojroques/vim-oscyank
-autocmd TextYankPost * if v:event.operator is 'y' && v:event.regname is '+' | execute 'OSCYankReg +' | endif
-autocmd TextYankPost * if v:event.operator is 'd' && v:event.regname is '+' | execute 'OSCYankReg +' | endif
+autocmd TextYankPost *
+    \ if v:event.operator is 'y' && v:event.regname is '+' |
+    \ execute 'OSCYankRegister +' |
+    \ endif
 
-" 使用 z a 打开和关闭 fold
-set foldlevelstart=99
-set foldmethod=expr
-set foldexpr=nvim_treesitter#foldexpr()
+autocmd TextYankPost *
+    \ if v:event.operator is 'd' && v:event.regname is '+' |
+    \ execute 'OSCYankRegister +' |
+    \ endif
+
+" 使用 z a 打开和关闭 fold，打开大文件（超过 10万行)的时候可能造成性能问题
+" set foldlevelstart=99
+" set foldmethod=expr
+" set foldexpr=nvim_treesitter#foldexpr()
 
 " 加载 lua 配置
 lua require 'usr'
@@ -88,11 +96,9 @@ lua require 'usr'
 " 加载 vim 配置, 参考 https://github.com/jdhao/nvim-config
 let s:core_conf_files = [
       \ 'misc.vim',
-      \ 'coc.vim',
       \ 'debug.vim',
       \ 'wilder.vim',
       \ 'startify.vim',
-      \ 'airline.vim',
       \ 'haskell.vim',
       \ 'rainbow.vim',
       \ ]
@@ -101,20 +107,8 @@ for s:fname in s:core_conf_files
   execute printf('source %s/vim/%s', stdpath('config'), s:fname)
 endfor
 
-" 设置主题，最下面的会生效
 colorscheme tokyonight-night
-" keymapping by whichkey doesn't work in neovim 0.8
-" patch for coc-sumneko-lua plugin on nixos
-" for details, see https://github.com/xiyaowong/coc-sumneko-lua/issues/22
-if $USERNAME == "martins3"
-  call coc#config("sumneko-lua.serverDir", "/home/martins3/.nix-profile/")
-  call coc#config("Lua.misc.parameters",
-        \ [ "--metapath",
-        \ "/home/martins3/.cache/sumneko_lua/meta",
-        \ "--logpath",
-        \ "/home/martins3/.cache/sumneko_lua/log"]
-        \)
-endif
+let g:loaded_perl_provider = 0
 
 " this keymapping originally set by whichkey doesn't work in neovim 0.8
 noremap <Space>bc :BDelete hidden<cr>
