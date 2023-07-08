@@ -14,6 +14,7 @@ local servers = {
   "vimls",
   "ccls",
   "marksman",
+  "gopls",
 }
 
 -- local settings = {
