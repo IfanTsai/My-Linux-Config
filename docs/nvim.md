@@ -1,4 +1,4 @@
-# 2022 年 vim 的 C/C++ 配置
+# 2023 年 vim 的 C/C++ 配置
 
 <!-- vim-markdown-toc GitLab -->
 
@@ -45,7 +45,6 @@
   * [快速移动](#快速移动)
   * [输入法自动切换](#输入法自动切换)
   * [远程 server 上复制粘贴](#远程-server-上复制粘贴)
-  * [[可选] Scala 集成](#可选-scala-集成)
 * [本配置源代码解释](#本配置源代码解释)
 * [FAQ](#faq)
 * [vim 的小技巧](#vim-的小技巧)
@@ -505,6 +504,7 @@ neovim 中有内置调试功能 [Termdebug](https://fzheng.me/2018/05/28/termdeb
   - 如果同时使用多个终端，其管理难度简直逆天。
   - 没有简洁的 voidkiss 中 FloatermNew 的功能。
 综上，我认为最近两年没有必要切换。
+
 ### 一键运行代码
 在 VSCode 中有一个非常有名的插件叫 [Code Runner](https://marketplace.visualstudio.com/items?itemName=formulahendry.code-runner)
 
@@ -616,27 +616,27 @@ vim 基本的移动技术，例如 e b w G gg 之类的就不说了， 下面简
 但是还是存在一些问题，不过暂时可以接受:
 - 在 nvim-tree.lua 中可以使用 `yy` 将文件的绝对路径拷贝到系统剪切板中，这是拷贝远程 server 的剪切板中，而不是本地电脑的系统剪切板中。
 
-### [可选] Scala 集成
-参考 https://github.com/scalameta/nvim-metals 中的文档:
+<!-- ### [可选] Scala 集成 -->
+<!-- 参考 https://github.com/scalameta/nvim-metals 中的文档: -->
 
-安装 cs
-```sh
-curl -fL https://github.com/coursier/launchers/raw/master/cs-x86_64-pc-linux.gz | gzip -d > cs
-chmod +x cs
-./cs setup
-```
+<!-- 安装 cs -->
+<!-- ```sh -->
+<!-- curl -fL https://github.com/coursier/launchers/raw/master/cs-x86_64-pc-linux.gz | gzip -d > cs -->
+<!-- chmod +x cs -->
+<!-- ./cs setup -->
+<!-- ``` -->
 
-以 [chipyard](https://github.com/ucb-bar/chipyard) 为例，在项目中执行
-```sh
-sbt bloopInstall
-```
-然后就可以自动索引了。
+<!-- 以 [chipyard](https://github.com/ucb-bar/chipyard) 为例，在项目中执行 -->
+<!-- ```sh -->
+<!-- sbt bloopInstall -->
+<!-- ``` -->
+<!-- 然后就可以自动索引了。 -->
 
 
 ## 本配置源代码解释
 总体来说，本配置的代码就是从上面介绍的各个项目提供的标准配置的组合，然后添加我的一些微调。
 
-nvim 配置在仓库的位置为 ./nvim
+nvim 配置在仓库的位置为 ./nvim 中:
 - init.vim : vim 的基础设置，在其中加载 vim/ 和 lua/usr 下的配置文件
 - vim/
   - debug.vim : 定义了两个函数
@@ -790,14 +790,6 @@ setxkbmap -option caps:swapescape
 ## 问题
 - [ ] shellcheck 无法处理 source 其他的文件的情况。
 - [ ] ,s 的时候，正好匹配的那个总是不是第一个，检查一下 telescope
-
-
-" 默认是不需要设置这个的，但是如果遇到 missing import error
-" 多fail_futex半是这个没有正确设置，参考:
-" - https://github.com/fannheyward/coc-pyright/issues/184
-" - https://stackoverflow.com/questions/68583492/pyright-report-missing-imports-error-in-neovim
-" call coc#config("python.pythonPath", "/home/martins3/.nix-profile/bin/python3")
-
 - [ ] 如何让 statusline 统计字数
   - 尝试使用这个吧 https://github.com/spencerwooo/cwim
 -->

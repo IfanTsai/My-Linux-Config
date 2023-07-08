@@ -151,6 +151,6 @@ require("packer").startup({function(use)
     -- quickly switch between header and source file in C/C++ project
     use {
         'jakemason/ouroboros',
-        requires = {{'nvim-lua/plenary.nvim'}}
+        requires = { { 'nvim-lua/plenary.nvim' } }
     }
 end})
