@@ -14,7 +14,7 @@ local opts = {
     client = {
       snippetSupport = true,
     },
-  },
+  }
 }
 
 return opts
