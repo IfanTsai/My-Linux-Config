@@ -138,4 +138,7 @@ require("lazy").setup({
   "voldikss/vim-translator", -- 翻译
   -- quickly switch between header and source file in C/C++ project
   "jakemason/ouroboros",
+  "ntpeters/vim-better-whitespace", -- 显示代码行尾的空格
+  "github/copilot.vim",
+  "luochen1990/rainbow",
 }, {})
