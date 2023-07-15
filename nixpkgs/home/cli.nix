@@ -31,6 +31,7 @@ in
     nodejs
     tmux
     tmuxp
+    pueue # TODO 研究下这个怎么利用
     screen
     tig
     xclip # x clipboard
@@ -118,6 +119,7 @@ in
     # ERROR: kernel release isn't found in "/nix/store/n3nrix9pc0m1ywzg8dq71bh2xr82c7l5-linux-6.3.5-dev"
     # 还是在虚拟机勉强维持生活吧
     unstable.bpftrace # bpftrace 新版本才支持 kfunc
+    blktrace
     heaptrack
     kernelshark
     trace-cmd
@@ -130,7 +132,8 @@ in
     acpi
     liburing
     cpuid
-    # @todo https://github.com/kkharji/sqlite.lua 需要设置 libsqlite3.so 的位置
+    # @todo https://github.com/kkharji/sqlite.lua/issues/28
+    # 需要设置 libsqlite3.so 的位置
     sqlite
     parted
     sysbench
@@ -271,8 +274,9 @@ in
 
   programs.git = {
     enable = true;
-    userEmail = "hubachelar@gmail.com";
-    userName = "Martin Hu";
+    userEmail = "xueshi.hu@smartx.com";
+    userName = "Xueshi Hu";
+
     extraConfig = {
       # https://github.com/dandavison/delta
       # --- begin
@@ -280,6 +284,12 @@ in
         editor = "nvim";
         pager = "delta";
         abbrev = 12;
+      };
+      sendemail={
+        smtpserver = "smtp.googlemail.com";
+        smtpencryption = "tls";
+        smtpserverport = 587;
+        smtpuser = "xueshi.hu@smartx.com";
       };
       pretty={
         fixes = "Fixes: %h (\"%s\")";

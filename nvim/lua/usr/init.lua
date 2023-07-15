@@ -1,5 +1,5 @@
 require("usr.options")
-require("usr.packer")
+require("usr.lazy")
 require("usr.lsp")
 require("usr.cmp")
 require("usr.bufferline")
@@ -14,6 +14,7 @@ require("usr.which-key")
 require("usr.colorscheme")
 require("usr.session")
 require("usr.autocmd")
+require("usr.alpha")
 require("colorizer").setup({
     "css",
     "javascript",
@@ -25,12 +26,24 @@ require("colorizer").setup({
 require("nvim-surround").setup({})
 require("gitsigns").setup({
     signs = {
-        add          = { text = '+' },
-        change       = { text = '│' },
-        delete       = { text = '_' },
-        topdelete    = { text = '‾' },
-        changedelete = { text = '~' },
-        untracked    = { text = '┆' },
+        add = {
+            text = '+'
+        },
+        change = {
+            text = '│'
+        },
+        delete = {
+            text = '_'
+        },
+        topdelete = {
+            text = '‾'
+        },
+        changedelete = {
+            text = '~'
+        },
+        untracked = {
+            text = '┆'
+        }
     },
     signcolumn = true,
     numhl = true,
@@ -40,8 +53,8 @@ require("gitsigns").setup({
         virt_text = true,
         virt_text_pos = "eol", -- 'eol' | 'overlay' | 'right_align'
         delay = 500,
-        ignore_whitespace = false,
-    },
+        ignore_whitespace = false
+    }
 })
 require("leap").add_default_mappings()
 require("nvim-autopairs").setup({})
@@ -63,4 +76,14 @@ vim.api.nvim_create_autocmd({"VimLeave"}, {
     callback = function()
         vim.cmd("sleep 10m")
     end
+})
+
+require("aerial").setup({
+    backends = {"markdown", "man", "lsp", "treesitter"},
+    layout = {
+        max_width = {30, 0.15},
+        placement = "edge",
+        default_direction = "left"
+    },
+    attach_mode = "global"
 })

@@ -90,6 +90,13 @@ autocmd TextYankPost *
 " set foldmethod=expr
 " set foldexpr=nvim_treesitter#foldexpr()
 
+" floaterm 永远的神
+let g:floaterm_width = 0.7
+let g:floaterm_height = 0.7
+let g:floaterm_keymap_prev   = '<C-p>'
+let g:floaterm_keymap_new    = '<C-n>'
+let g:floaterm_keymap_toggle = '<C-t>'
+
 " 加载 lua 配置
 lua require 'usr'
 
@@ -98,7 +105,6 @@ let s:core_conf_files = [
       \ 'misc.vim',
       \ 'debug.vim',
       \ 'wilder.vim',
-      \ 'startify.vim',
       \ 'haskell.vim',
       \ 'rainbow.vim',
       \ ]
