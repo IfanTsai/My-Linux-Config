@@ -140,5 +140,4 @@ require("lazy").setup({
   "jakemason/ouroboros",
   "ntpeters/vim-better-whitespace", -- 显示代码行尾的空格
   "github/copilot.vim",
-  "luochen1990/rainbow",
 }, {})
