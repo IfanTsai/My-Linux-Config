@@ -78,6 +78,8 @@ vim.api.nvim_create_autocmd({"VimLeave"}, {
     end
 })
 
+-- use vista rather than aerial
+--[[
 require("aerial").setup({
     backends = {"markdown", "man", "lsp", "treesitter"},
     layout = {
@@ -87,3 +89,4 @@ require("aerial").setup({
     },
     attach_mode = "global"
 })
+]]--

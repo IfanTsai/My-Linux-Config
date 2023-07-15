@@ -56,7 +56,8 @@ require("lazy").setup({
   }, -- 结构化查询和替换
 
   -- ui
-  "stevearc/aerial.nvim", -- 导航栏
+  --"stevearc/aerial.nvim", -- 导航栏
+  "liuchengxu/vista.vim", -- 导航栏
   "kyazdani42/nvim-tree.lua", -- 文件树
   "akinsho/bufferline.nvim", -- buffer
   "nvim-lualine/lualine.nvim", -- 状态栏
