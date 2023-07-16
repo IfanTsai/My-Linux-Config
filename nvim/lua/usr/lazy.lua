@@ -140,5 +140,12 @@ require("lazy").setup({
   -- quickly switch between header and source file in C/C++ project
   "jakemason/ouroboros",
   "ntpeters/vim-better-whitespace", -- 显示代码行尾的空格
-  "github/copilot.vim",
+  {
+    "github/copilot.vim",
+    config = function()
+      vim.g.copilot_assume_mapped = true
+      vim.g.copilot_no_tab_map = true
+      vim.api.nvim_set_keymap("i", "<C-y>", 'copilot#Accept("<CR>")', { silent = true, expr = true })
+    end
+  },
 }, {})
