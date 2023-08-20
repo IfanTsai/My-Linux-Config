@@ -140,12 +140,13 @@ install autoconf
 install automake
 install libtool systemd-devel
 
-install vim htop perf elfutils elfutils-libelf-devel
+install vim htop perf elfutils elfutils-libelf-devel cpupowerutils
 
 install pam-devel
 install numactl fio
 install flex flex-devel bios bison-devel
 install ncurses-devel # tig 依赖
+install tree
 
 ohmyzsh
 zsh_fix

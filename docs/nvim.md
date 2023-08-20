@@ -14,6 +14,8 @@
   * [安装 nvim](#安装-nvim)
   * [安装 nerdfonts](#安装-nerdfonts)
   * [安装 bear](#安装-bear)
+  * [安装 im-select](#安装-im-select)
+  * [安装各种 lsp](#安装各种-lsp)
   * [安装本配置](#安装本配置)
   * [checkhealth 检查](#checkhealth-检查)
 * [基本操作](#基本操作)
@@ -40,7 +42,6 @@
   * [一键运行代码](#一键运行代码)
   * [一键注释代码](#一键注释代码)
   * [markdown 集成](#markdown-集成)
-  * [代码折叠](#代码折叠)
   * [Session](#session)
   * [快速移动](#快速移动)
   * [输入法自动切换](#输入法自动切换)
@@ -53,12 +54,12 @@
 * [值得一看的配置](#值得一看的配置)
 * [值得关注的插件](#值得关注的插件)
 * [有趣的插件](#有趣的插件)
-* [blog](#blog)
 * [学习](#学习)
-* [主题](#主题)
+* [找资源](#找资源)
 * [常见知识点](#常见知识点)
 * [小问题](#小问题)
 * [亟须解决的问题](#亟须解决的问题)
+* [TODO](#todo)
 * [衍生](#衍生)
 
 <!-- vim-markdown-toc -->
@@ -89,7 +90,7 @@
 1. [openvim](https://www.openvim.com/tutorial.html): 交互式的学习 vim
 2. [vim check sheet](https://vim.rtorr.com/lang/zh_cn): vim 常用快捷键清单
 
-如果完全没有基础，建议使用 openvim 打牢基础之后，然后就直接将 vim 用于实战中间，因为这些快捷键都是肌肉记忆，无非多熟悉一下而已。当你知道 hikl 之类的操作之后，之后可以
+如果完全没有基础，建议使用 openvim 打牢基础之后，然后就直接将 vim 用于实战中间，因为这些快捷键都是肌肉记忆，无非多熟悉一下而已。当你知道 hjkl 之类的操作之后，之后可以
 使用 vim check sheet 来强化补充一下，不要指望一次全部背下来，也没有必要全部记住，一次学几个，学最能提高你工作效率的那几个。
 
 vim 的学习曲线陡峭主要就是在最开始的 hjkl 这些快捷键的记忆，但是最多几天，之后就学习曲线就非常平缓了，无非是装装插件，重新映射一下快捷键之类的事情。实不相瞒，我用 vim 好几年，至今不会写超过 5 行的 vimscript 。
@@ -128,7 +129,7 @@ async 的效果当然就是快，当一个插件存在其 async 的版本，那�
 
 1. 更加的智能和高效的高亮。原始的 vim 中只能按照正则匹配来高亮关键字，但是 treesitter 可以区分什么是函数，成员，类，宏等定义。
 2. 如果想要跳转到函数头，在 vim 中使用默认提供 [`[``m`](https://stackoverflow.com/questions/2109503/how-to-jump-to-the-beginning-of-the-current-function-body-in-vim)，但是这是根据词法规则实现的，要么跳转到第一个匹配的 { ，要么跳转到最外层的 { ，因此
-   对于文件的格式有要求，但是如何使用上 [nvim-treesitter-textobjects](https://github.com/nvim-treesitter/nvim-treesitter-textobjects)，这个问题就不存在了，你总是可以跳转到函数的开始位置。
+   对于文件的格式有要求，但是如果使用上 [nvim-treesitter-textobjects](https://github.com/nvim-treesitter/nvim-treesitter-textobjects)，这个问题就不存在了，你总是可以跳转到函数的开始位置。
 3. 精确的拼写检查。[spellsitter](https://www.reddit.com/r/neovim/comments/x7k7r7/spellsitter_merged_to_neovim_core/) 可以让拼写检查仅仅检查注释中内容，而默认的检查会检查所有的单词，包括各种缩写函数名，那些检查大部分都是误报。
 
 通过 Treesitter ，[有的插件](https://github.com/ThePrimeagen/refactoring.nvim)可以做到超乎想象的事情，甚至是将《重构，改善既有代码》的操作集成到 vim 中。
@@ -147,7 +148,9 @@ reddit 上的一些老哥目前[认为 coc.nvim 的自动补全做的更好，�
 ## 为什么应该使用 neovim 而不是 vim
 
 其实 vim 还有一个祖先叫做 vi, vim 全称为 vi improve, 但是 vim 在很长一段时间更新的不大，neovim 的作者提交了一个很大的 patch 给 vim，但是被 vim 的作者拒绝了，
-因为这个 patch 太大了，改动太多，然后 neovim 的作者就开始自立门户搞了一个 neovim，很多 vim 特性都是被 neovim 逼出来的。总体来说，neovim 相较于 vim :
+因为这个 patch 太大了，改动太多，然后 neovim 的作者就开始自立门户搞了一个 neovim，很多 vim 特性都是被 neovim 逼出来的，
+[neovim 推出之后，vim 的更新速度大大加快了](https://www.contextualize.ai/mpereira/20-years-of-vim-ef9acae9)
+总体来说，neovim 相较于 vim :
 
 1. 更新更快, 添加的新功能更多，例如内置 lsp, lua 语言的支持。
 2. 社区更活跃。这个你对比一下 vim 和 neovim 的开发者数量就可以知道了，vim 很长时间都只有一个人开发的。
@@ -195,7 +198,7 @@ sudo make install
 注意，需要修改 terminal 的字体为 nerdfonts 中才不会出现乱码。
 
 ```sh
-wget https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/Hasklig.zip
+wget https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/Hasklig.zip
 unzip Hasklig.zip -d ~/.fonts
 fc-cache -fv
 ```
@@ -216,6 +219,20 @@ sudo apt install bear
 4. see [ccls documentation](https://github.com/MaskRay/ccls/wiki/Project-Setup) for more
 
 一个工程只要生成 `compile_commands.json`，那么一切就大功告成了。
+
+### 安装 im-select
+
+为了方便在 nvim 进入 normal 模式的时候自动切换输入法为英文，采用 keaising/im-select.nvim 插件，其依赖 im-select
+安装方法插件作者写的相当清晰 : https://github.com/keaising/im-select.nvim
+
+### 安装各种 lsp
+首先尝试使用你的平台上的包管理器安装，如果不可以，那么可以具体参考各个 lsp 的文档:
+
+1. [marksman](https://github.com/artempyanykh/marksman/blob/main/docs/install.md)
+2. [efm](https://github.com/mattn/efm-langserver#installation)
+3. [ccls](https://github.com/MaskRay/ccls/wiki/Install)
+
+当然，遇到了什么问题也可以找我讨论。
 
 ### 安装本配置
 
@@ -543,17 +560,7 @@ vim 中利用 [`code_runner.nvim`](https://github.com/CRAG666/code_runner.nvim) 
 | binding           | function             |
 | ----------------- | -------------------- |
 | `<space>` `t` `m` | 开启表格快捷编辑模式 |
-| `<space>` `l` `p` | 预览                 |
-
-### 代码折叠
-
-利用上 treesitter ，vim 内置的折叠变得非常易用。
-
-| binding | function                    |
-| ------- | --------------------------- |
-| `z` `a` | 打开或者关闭光标所在的 fold |
-| `z` `R` | 打开所有的 fold             |
-| `z` `M` | 关闭所有的 fold             |
+| `<leader>` `x`    | 预览                 |
 
 ### Session
 
@@ -562,6 +569,7 @@ vim 中利用 [`code_runner.nvim`](https://github.com/CRAG666/code_runner.nvim) 
 使用命令 SessionDelete 可以删除掉保存的 session 。
 
 如果想要清理所有 sessions 使用如下命令发。
+
 ```sh
 rm -r ~/.local/share/nvim/sessions
 ```
@@ -643,7 +651,7 @@ vim 基本的移动技术，例如 e b w G gg 之类的就不说了， 下面简
 
 总体来说，本配置的代码就是从上面介绍的各个项目提供的标准配置的组合，然后添加我的一些微调。
 
-nvim 配置在仓库的位置为 ./nvim 中:
+nvim 配置在仓库的位置为 ./nvim 中，其他的目录不用管，那是关于 vim 其他的配置。
 
 - init.vim : vim 的基础设置，在其中加载 vim/ 和 lua/usr 下的配置文件
 - vim/
@@ -654,6 +662,7 @@ nvim 配置在仓库的位置为 ./nvim 中:
   - packer.lua : 安装的插件，按照作用放到一起，每一个插件是做什么的都有注释。
   - which-key.lua : 快捷键的配置
   - nvim-tree.lua / orgmode.lua / ... : 插件的默认配置的调整，都非常短。
+  - lsp : native lsp 相关的配置
 - UltiSnips/ : 自定义的代码段
 
 ## FAQ
@@ -757,11 +766,12 @@ setxkbmap -option caps:swapescape
 
 ## 值得一看的配置
 
+- [kickstart.nvim](https://github.com/nvim-lua/kickstart.nvim) 这绝对是开始使用 lua 来配置的 nvim 开始的好地方。强烈推荐。
 - [LunarVim](https://github.com/LunarVim/LunarVim) 超过 15000 star 的 IDE 配置
 - [NvChad](https://github.com/NvChad/NvChad) 同上
-- [kickstart.nvim](https://github.com/nvim-lua/kickstart.nvim) 只有 300 行的配置，这绝对是开始使用 lua 来配置的 nvim 开始的好地方。
 - [Neovim-from-scratch](https://github.com/LunarVim/Neovim-from-scratch) : LunarVim 出品的纯 lua neovim 配置，可以配套 [官方视频](https://www.youtube.com/watch?v=ctH-a-1eUME&list=PLhoH5vyxr6Qq41NFL4GvhFp-WLd5xzIzZ) 来一步步的搭建。
 - [jdhao/nvim-config](https://github.com/jdhao/nvim-config) : jdhao 的配置
+- [nyoom.nvim](https://github.com/nyoom-engineering/nyoom.nvim) : 纯 fennel
 
 ## 值得关注的插件
 
@@ -769,22 +779,19 @@ setxkbmap -option caps:swapescape
 - [trouble.nvim](https://github.com/folke/trouble.nvim) : 提升 lsp 体验
 - [neodev](https://github.com/folke/neodev.nvim) neovim 开发 lua 插件环境
 - [conflict-marker.vim](https://github.com/rhysd/conflict-marker.vim) : 在 vim 中如何高效解决 git conflict
-- [nvim-treesitter-context](https://github.com/nvim-treesitter/nvim-treesitter-context) : 利用 treesitter 显示当前的上下文，但是
-- [nvim-ufo](https://github.com/kevinhwang91/nvim-ufo) 更加只能的折叠
+- [nvim-ufo](https://github.com/kevinhwang91/nvim-ufo) 更加智能的折叠
 - [LuaSnip](https://github.com/L3MON4D3/LuaSnip) : snippet 管理器
   - [介绍从 UltiSnips 切换到 LuaSnip](https://www.reddit.com/r/neovim/comments/weonip/from_ultisnips_to_luasnip/)
 - [nvim-example-lua-plugin](https://github.com/jacobsimpson/nvim-example-lua-plugin) : 插件模板，打造你的第一个插件
 - [codeium](https://github.com/Exafunction/codeium.vim) : Copilot 替代品
 - [nvim-metals](https://github.com/scalameta/nvim-metals) : 芯片前端开发必备
+- [vs-tasks.nvim](https://github.com/EthanJWright/vs-tasks.nvim) : Code Runner
+- [NeoComposer](https://github.com/ecthelionvi/NeoComposer.nvim) : 更好地使用 macro
 
 ## 有趣的插件
 
 - [zone.nvim](https://github.com/tamton-aquib/zone.nvim) : 屏保
 - [cellular-automaton.nvim](https://github.com/Eandrju/cellular-automaton.nvim) : 细胞自动机
-
-## blog
-
-- [awesome neovim](https://github.com/rockerBOO/awesome-neovim)
 
 ## 学习
 
@@ -792,11 +799,11 @@ setxkbmap -option caps:swapescape
 2. [vim galore](https://github.com/mhinz/vim-galore)
 3. [devhints](https://devhints.io/vimscript) : 另一个 vim checksheet
 4. :help lua-guide
-5. [awesome neovim](https://github.com/rockerBOO/awesome-neovim)
 
-## 主题
+## 找资源
 
 1. [vimcolorschemes](https://vimcolorschemes.com/) vim 主题网站
+2. [awesome neovim](https://github.com/rockerBOO/awesome-neovim)
 
 ## 常见知识点
 
@@ -808,6 +815,7 @@ setxkbmap -option caps:swapescape
   - `:%norm dw`
 
 ## 小问题
+
 极为细节的问题，但是折腾下应该还是可解的
 
 - shellcheck 无法处理 source 其他的文件的情况。
@@ -817,14 +825,20 @@ setxkbmap -option caps:swapescape
 
 ## 亟须解决的问题
 
-1. 编辑远程代码: 最佳状态是 vscode 的那种模式，收集一些替代
-
-- https://github.com/jamestthompson3/nvim-remote-containers
-- https://github.com/OscarCreator/rsync.nvim
-- https://github.com/chipsenkbeil/distant.nvim
-
+1. 编辑远程代码: 最佳状态是 vscode 的那种模式，收集一些替代，虽然都差的很远
+   - https://github.com/jamestthompson3/nvim-remote-containers
+   - https://github.com/OscarCreator/rsync.nvim
+   - https://github.com/chipsenkbeil/distant.nvim
 2. [gcov](https://marketplace.visualstudio.com/items?itemName=JacquesLucke.gcov-viewer)
-3. 调试
+3. 调试，目前社区在尝试的方案主要是 dap
+   - https://github.com/jbyuki/one-small-step-for-vimkind
+   - https://github.com/nvim-lua/kickstart.nvim/blob/master/lua/kickstart/plugins/debug.lua
+
+## TODO
+
+3. https://github.com/koalaman/shellcheck/issues/1284
+4. https://www.trickster.dev/post/vim-is-touch-typing-on-steroids/ : 从后往前阅读
+5. https://todoist.com/zh-CN/templates ; 重新审视一下 orgmode 的作用
 
 ## 衍生
 
@@ -836,6 +850,7 @@ setxkbmap -option caps:swapescape
 6. [qutebrowser](https://github.com/qutebrowser/qutebrowser) : 基于 Python 和 Qt 构建的 vim 快捷键的浏览器
 7. [helix](https://github.com/helix-editor/helix) : 和 neovim 类似，号称更加 modern 的编辑器
 8. [vim-keybindings-everywhere-the-ultimate-list](https://github.com/erikw/vim-keybindings-everywhere-the-ultimate-list) : 在其他程序中使用 vim 的键位映射。
+9. [nyoom.nvim](https://github.com/nyoom-engineering/nyoom.nvim) : 纯 fennel
 
 [^2]: [I do not use a debugger](https://lemire.me/blog/2016/06/21/i-do-not-use-a-debugger/)
 [^3]: [The normal command](https://www.reddit.com/r/vim/comments/tbz449/norm_macros_are_great/)

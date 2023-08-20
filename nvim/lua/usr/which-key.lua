@@ -10,16 +10,17 @@ wk.setup({
 wk.register({
   ["K"] = { "<cmd>lua vim.lsp.buf.hover()<cr>", "document" },
   ["g"] = {
-    d = { "<cmd>Telescope lsp_definitions<cr>", "go to definition" },
+    d = { "<cmd>lua vim.lsp.buf.definition()<cr>", "go to definition" },
     r = { "<cmd>lua vim.lsp.buf.references()<cr>", "go to reference" },
-    l = { "<cmd>Telescope diagnostics<cr>", "diagnostics" },
-    I = { "<cmd>lua vim.lsp.buf.implementation()<cr>", "go to implementation" },
+    w = { "<cmd>Telescope diagnostics<cr>", "diagnostics" },
+    i = { "<cmd>lua vim.lsp.buf.implementation()<cr>", "go to implementation" },
     D = { "<cmd>lua vim.lsp.buf.declaration()<cr>", "go to declaration" },
+    -- x 打开文件
+    -- s 用于 leap 跳转到下一个窗口
   },
   -- search
   ["<leader>"] = {
     b = { "<cmd>Telescope buffers<cr>", "searcher buffers" },
-    e = { "<cmd>Telescope bookmarks<cr>", "searcher browser bookmarks" },
     f = { "<cmd>Telescope find_files<cr>", "search files (include submodules)" },
     F = { "<cmd>Telescope git_files<cr>", "search files (exclude submodules)" },
     g = { "<cmd>Telescope live_grep<cr>", "live grep" },
@@ -28,7 +29,6 @@ wk.register({
     i = { "<cmd>Telescope jumplist<cr>", "search jumplist" },
     j = { "<cmd>Telescope emoji<cr>", "search emoji" },
     k = { "<cmd>Telescope colorscheme<cr>", "colorscheme" },
-    m = { "<cmd>Telescope vim_bookmarks all<cr>", "search bookmarks in project" },
     o = { "<cmd>Telescope lsp_document_symbols<cr>", "search symbols in file" },
     -- leader p used for paste from system clipboard
     s = { "<cmd>Telescope lsp_dynamic_workspace_symbols <cr>", "search symbols in project" },
@@ -105,7 +105,6 @@ wk.register({
       n = { "<cmd>lua vim.lsp.buf.rename()<cr>", "rename" },
       s = { "<cmd>lua vim.lsp.buf.signature_help()<cr>", "signature help" },
       q = { "<cmd>lua vim.diagnostic.setloclist()<cr>", "" },
-      p = { "<cmd>call Preivew()<cr>", "preview" },
       r = { "<cmd>RunCode<cr>", "run code" },
     },
     -- o 被 orgmode 使用
@@ -139,8 +138,7 @@ wk.register({
     s = { "<cmd>sp<cr>", "horizontal split window" },
     m = { "<cmd>only<cr>", "delete other window" },
     u = { "<cmd>UndotreeToggle<cr>", "open undo tree" },
-    --n = { "<cmd>AerialToggle!<cr>", "toggle navigator" },
-    n = { "<cmd>Vista!!<cr>", "toggle vista navigator" },
+    n = { "<cmd>AerialToggle!<cr>", "toggle navigator" },
     h = { "<C-w>h", "go to the window left" },
     j = { "<C-w>j", "go to the window below" },
     k = { "<C-w>k", "go to the window up" },
@@ -148,9 +146,10 @@ wk.register({
   },
   m = {
     name = "+bookmarks",
-    a = { "<cmd>Telescope vim_bookmarks all<cr>", "list marks in project" },
-    m = { "<cmd>BookmarkToggle<cr>", "toggle bookmark" },
-    x = { "<cmd>BookmarkClearAll<cr>", "remove all bookmarks in project" },
+    a = { "<cmd>Telescope bookmarks<cr>", "search bookmarks" },
+    d = { "<cmd>lua require'bookmarks.list'.delete_on_virt()<cr>", "Delete bookmark at virt text line" },
+    m = { "<cmd>lua require'bookmarks'.add_bookmarks()<cr>", "add bookmarks" },
+    n = { "<cmd>lua require'bookmarks.list'.show_desc() <cr>", "Show bookmark note" },
   },
   ["<tab>"] = { "<cmd>wincmd w<cr>", "switch window" },
 })
@@ -182,7 +181,12 @@ end
 
 vim.api.nvim_set_keymap("v", "<space>lf", "<Esc><cmd>lua FormatFunction()<CR>", { noremap = true })
 
-vim.cmd("autocmd FileType sh lua WhichKeyLeaderX()")
-function WhichKeyLeaderX()
+vim.cmd("autocmd FileType sh lua BashLeaderX()")
+function BashLeaderX()
   vim.api.nvim_set_keymap("n", "<leader>x", ":!chmod +x %<CR>", { noremap = false, silent = true })
+end
+
+vim.cmd("autocmd FileType markdown lua MarkdownLeaderX()")
+function MarkdownLeaderX()
+  vim.api.nvim_set_keymap("n", "<leader>x", ":MarkdownPreview<CR>", { noremap = false, silent = true })
 end

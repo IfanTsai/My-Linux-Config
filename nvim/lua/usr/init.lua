@@ -12,7 +12,6 @@ require("usr.telescope")
 require("usr.version")
 require("usr.which-key")
 require("usr.colorscheme")
-require("usr.session")
 require("usr.autocmd")
 require("usr.alpha")
 require("colorizer").setup({
@@ -23,7 +22,10 @@ require("colorizer").setup({
         mode = "foreground"
     }
 })
-require("nvim-surround").setup({})
+require("nvim-surround").setup()
+require("persisted").setup({
+    autoload = true
+})
 require("gitsigns").setup({
     signs = {
         add = {
@@ -57,13 +59,14 @@ require("gitsigns").setup({
     }
 })
 require("leap").add_default_mappings()
-require("nvim-autopairs").setup({})
-require("fidget").setup({})
-require("nvim-navic").setup({})
+require("nvim-autopairs").setup()
+require("fidget").setup()
+require("nvim-navic").setup()
 require("barbecue").setup()
 require("nvim-lightbulb").update_lightbulb()
 require("im_select").setup()
 require("lualine").setup()
+require("rsync").setup()
 
 -- require("luasnip.loaders.from_lua").lazy_load({ paths = "~/.config/nvim/LuaSnip/" })
 require("luasnip.loaders.from_snipmate").lazy_load({
@@ -78,15 +81,17 @@ vim.api.nvim_create_autocmd({"VimLeave"}, {
     end
 })
 
--- use vista rather than aerial
---[[
 require("aerial").setup({
     backends = {"markdown", "man", "lsp", "treesitter"},
     layout = {
         max_width = {30, 0.15},
         placement = "edge",
-        default_direction = "left"
+        default_direction = "right"
     },
     attach_mode = "global"
 })
-]]--
+
+require("bookmarks").setup({
+    mappings_enabled = false,
+    virt_pattern = {"*.lua", "*.md", "*.c", "*.h", "*.sh"}
+})

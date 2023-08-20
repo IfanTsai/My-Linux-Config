@@ -10,6 +10,7 @@ in
 {
   imports = [
     ./sys/cli.nix
+    ./sys/kernel.nix
     ./sys/gui.nix # @todo 这个需要学习下 nix 语言了
   ] ++ (if (builtins.getEnv "DISPLAY") != ""
   then [
@@ -33,10 +34,24 @@ in
 
   programs.zsh.enable = true;
 
+  nixpkgs.overlays = [
+    (let
+     pinnedPkgs = import(pkgs.fetchFromGitHub {
+       owner = "NixOS";
+       repo = "nixpkgs";
+       rev = "b6bbc53029a31f788ffed9ea2d459f0bb0f0fbfc";
+       sha256 = "sha256-JVFoTY3rs1uDHbh0llRb1BcTNx26fGSLSiPmjojT+KY=";
+       }) {};
+     in
+     final: prev: {
+     docker = pinnedPkgs.docker;
+     })
+  ];
+
   virtualisation.docker.enable = true;
   virtualisation.vswitch.enable = true;
 
-  # zramSwap.enable = true;
+  zramSwap.enable = true;
 
   networking.proxy.default = "http://127.0.0.1:8889";
   networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
@@ -49,7 +64,9 @@ in
     unstable.tailscale
     cifs-utils
   ];
+
   services.tailscale.enable = true;
+
   # http://127.0.0.1:19999/
   # services.netdata.enable = true;
 
@@ -139,7 +156,6 @@ in
   boot = {
     crashDump.enable = false; # TODO 这个东西形同虚设，无须浪费表情
     crashDump.reservedMemory = "1G";
-    kernelPackages = pkgs.linuxPackages_latest;
     # nixos 的 /tmp 不是 tmpfs 的，但是我希望重启之后，/tmp 被清空
     tmp.cleanOnBoot = true;
 
@@ -165,66 +181,6 @@ in
     };
     supportedFilesystems = [ "ntfs" ];
   };
-
-  boot.kernelParams = [
-    # "transparent_hugepage=always"
-    # https://gist.github.com/rizalp/ff74fd9ededb076e6102fc0b636bd52b
-    # 十次测量编译内核，打开和不打开的性能差别为 : 131.1  143.4
-    # 性能提升 9.38%
-    # "noibpb"
-    # "nopti"
-    # "nospectre_v2"
-    # "nospectre_v1"
-    # "l1tf=off"
-    # "nospec_store_bypass_disable"
-    # "no_stf_barrier"
-    # "mds=off"
-    # "mitigations=off"
-    # 硬件上都直接不支持了
-    # "tsx=on"
-    # "tsx_async_abort=off"
-
-    # vfio 直通
-    "intel_iommu=on"
-    "intremap=on"
-    "iommu=pt"
-    "amd_iommu_intr=vapic"
-    "kvm-amd.avic=1"
-    # "amd_iommu_intr=legacy"
-    "ftrace=function"
-    "ftrace_filter=amd_iommu_int_thread"
-
-    # "processor.max_cstate=1"
-    # "intel_idle.max_cstate=0"
-    # "amd_iommu=off"
-    # "amd_iommu=pgtbl_v2"
-    # "iommu=pt"
-    # 手动禁用 avx2
-    # "clearcpuid=156"
-
-    # @todo 不是 systemd 会默认启动 fsck 的吗，这个需要啥
-    "fsck.mode=force"
-    "fsck.repair=yes"
-  ];
-
-  boot.kernelPatches = [
-  {
-    name = "tracing";
-    patch = null;
-    extraStructuredConfig = {
-      BOOTTIME_TRACING = lib.kernel.yes;
-    };
-  }
-  # 增加一个 patch 的方法
-  /*
-  {
-    name = "amd-iommu";
-    # https://www.reddit.com/r/NixOS/comments/oolk59/how_do_i_apply_local_patches_to_the_kernel/
-    # 这里不要携带双引号
-    patch = /home/martins3/.dotfiles/nixpkgs/patches/amd_iommu.patch;
-  }
-  */
-  ];
 
   # GPU passthrough with vfio need memlock
   security.pam.loginLimits = [
@@ -384,4 +340,23 @@ in
     "vm.swappiness" = 200;
     "vm.overcommit_memory" = 1;
   };
+
+ # 这一个例子如何自动 mount 一个盘，但是配置放到 /etc/nixos/configuration.nix
+ # 中，参考[1] 但是 options 只有包含一个
+ # [1]: https://unix.stackexchange.com/questions/533265/how-to-mount-internal-drives-as-a-normal-user-in-nixos
+ #
+ #  fileSystems."/home/martins3/hackme" = {
+ #    device = "/dev/disk/by-uuid/b709d158-aa6a-4b72-8255-513517548111";
+ #    fsType = "auto";
+ #    options = [ "user"];
+ #  };
+
+
+  # 配合使用
+  # sudo mount -t nfs 127.0.0.1:/home/martins3/nfs /mnt
+  # 这个时候居然可以删除掉 nfs ，乌鱼子
+  services.nfs.server.enable = true;
+  services.nfs.server.exports = ''
+    /home/martins3/nfs         127.0.0.1(rw,fsid=0,no_subtree_check)
+  '';
 }

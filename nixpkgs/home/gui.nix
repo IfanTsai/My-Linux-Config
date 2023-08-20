@@ -23,7 +23,8 @@ in
   ];
 
   home.packages = with pkgs; [
-    # neovide
+    neovide
+    # shiori # bookmark 管理，但是没搞懂怎么使用
     # unstable.clash
     unstable.wpsoffice
     unstable.sublime-merge
@@ -41,10 +42,11 @@ in
     # joplin-desktop # 还有 joplin
     # gource
     unstable.firefox
-    unstable.microsoft-edge-beta
+    unstable.microsoft-edge-dev
     # unstable.google-chrome
-    # unstable.thunderbird
+    unstable.thunderbird
     unstable.feishu
+    podman-desktop
     # tdesktop # telegram
     # unstable.flutter # 版本不足以支持 localsend @todo 等到支持的时候再去分析吧
     # nur.repos.xddxdd.wechat-uos # 别整这些虚头巴脑了，还是虚拟机吧，解决一切问题。

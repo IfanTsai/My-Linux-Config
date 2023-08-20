@@ -18,7 +18,7 @@ require("lazy").setup({
   "folke/which-key.nvim", -- 用于配置和提示快捷键
   "kkharji/sqlite.lua", -- 数据库
 
-  -- Cmp
+  -- 补全
   { "hrsh7th/nvim-cmp" }, -- The completion plugin
   { "hrsh7th/cmp-buffer" }, -- buffer completions
   { "hrsh7th/cmp-path" }, -- path completions
@@ -56,8 +56,7 @@ require("lazy").setup({
   }, -- 结构化查询和替换
 
   -- ui
-  --"stevearc/aerial.nvim", -- 导航栏
-  "liuchengxu/vista.vim", -- 导航栏
+  "stevearc/aerial.nvim", -- 导航栏
   "kyazdani42/nvim-tree.lua", -- 文件树
   "akinsho/bufferline.nvim", -- buffer
   "nvim-lualine/lualine.nvim", -- 状态栏
@@ -73,9 +72,9 @@ require("lazy").setup({
   "tpope/vim-fugitive", -- 显示 git blame，实现一些基本操作的快捷执行
   "rhysd/git-messenger.vim", -- 利用 git blame 显示当前行的 commit message
   "lewis6991/gitsigns.nvim", -- 显示改动的信息
+  "f-person/git-blame.nvim", -- 显示 git blame 信息
   -- 基于 telescope 的搜索
   "nvim-telescope/telescope.nvim",
-
   {
     "nvim-telescope/telescope-fzf-native.nvim",
     build = "make",
@@ -83,8 +82,6 @@ require("lazy").setup({
       return vim.fn.executable("make") == 1
     end,
   },
-
-  "dhruvmanila/telescope-bookmarks.nvim", -- 搜索 bookmarks
   "nvim-telescope/telescope-frecency.nvim", -- 查找最近打开的文件
   -- 命令执行
   "voldikss/vim-floaterm", -- 终端
@@ -113,11 +110,6 @@ require("lazy").setup({
   "mg979/vim-visual-multi", -- 同时编辑多个位置
   "AckslD/nvim-neoclip.lua", -- 保存 macro
   "windwp/nvim-spectre", -- 媲美 vscode 的多文件替换
-  -- 快速移动
-  "ggandor/leap.nvim",
-  -- 书签
-  "MattesGroeger/vim-bookmarks",
-  "tom-anders/telescope-vim-bookmarks.nvim", -- 辅助书签的搜索
   -- 高亮
   "norcalli/nvim-colorizer.lua", -- 显示 #FFFFFF
   "andymass/vim-matchup", -- 高亮匹配的元素，例如 #if 和 #endif
@@ -128,7 +120,10 @@ require("lazy").setup({
   "jackguo380/vim-lsp-cxx-highlight", -- ccls 高亮
   "mattn/efm-langserver", -- 支持 bash
   "gbrlsnchs/telescope-lsp-handlers.nvim",
+  "jakemason/ouroboros", -- quickly switch between header and source file in C/C++ project
   -- 其他
+  "ggandor/leap.nvim", -- 快速移动
+  { "crusj/bookmarks.nvim", branch = "main" }, -- 书签
   "tyru/open-browser.vim", -- 使用 gx 打开链接
   "keaising/im-select.nvim", -- 自动切换输入法
   "olimorris/persisted.nvim", -- 打开 vim 的时候，自动回复上一次打开的样子
@@ -137,8 +132,6 @@ require("lazy").setup({
   "azabiong/vim-highlighter", -- 高亮多个搜索内容
   "dstein64/vim-startuptime", -- 分析 nvim 启动时间
   "voldikss/vim-translator", -- 翻译
-  -- quickly switch between header and source file in C/C++ project
-  "jakemason/ouroboros",
   "ntpeters/vim-better-whitespace", -- 显示代码行尾的空格
   {
     "github/copilot.vim",
@@ -153,5 +146,9 @@ require("lazy").setup({
     config = function()
       vim.cmd("au VimEnter * RainbowParenthesesToggleAll")
     end
+  },
+  {
+    "OscarCreator/rsync.nvim", -- 自动同步代码远程
+    build = "make", -- 实在不行，进入到 ~/.local/share/nvim/lazy/rsync.nvim 中执行下 make
   },
 }, {})
