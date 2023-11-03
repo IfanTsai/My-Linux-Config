@@ -62,7 +62,7 @@ else
 	nix-shell --command "make defconfig kvm_guest.config martins3.config -j"
 	# nix-shell --command "chrt -i 0 make CC='ccache gcc' -j$threads"
 	nix-shell --command "chrt -i 0 make -j$threads"
-	python3 /home/martins3/.dotfiles/scripts/systemd/revert-build-fast.py
+	# python3 /home/martins3/.dotfiles/scripts/systemd/revert-build-fast.py
 	# scripts/systemd/expand-paging_tmpl.sh
 	for i in "${special_files[@]}"; do
 		git add "$i"
@@ -75,7 +75,8 @@ fi
 # nix-shell --command "chrt -i 0 make -C tools/perf -j$(($(getconf _NPROCESSORS_ONLN) - 1))"
 
 if [[ ! ${kcov} ]]; then
-	curl -d "martins3,tag=13900K kernel=$SECONDS" -X POST 'http://127.0.0.1:8428/write' || true
+	# curl -d "martins3,tag=13900K kernel=$SECONDS" -X POST 'http://127.0.0.1:8428/write' || true
+  echo "$(date): $SECONDS" >>/home/martins3/core/cl.txt
 fi
 
 # 编译文档的速度太慢了，不想每次都等那么久

@@ -59,9 +59,6 @@ git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 - `prefix + alt + u`
   - remove/uninstall plugins not on the plugin list
 
-## 定制 statusline
-感觉没必要，浪费时间
-
 ## session 管理
 
 通过 tmuxp 创建一个 session 并且自动执行初始化命令:
@@ -86,38 +83,13 @@ windows:
       - cd ~/core/.dotfiles
       - nvim
 ```
+## 配合 bash 使用
 
-## zellij
-- https://zellij.dev/documentation/introduction.html
-- https://news.ycombinator.com/item?id=26902430
-  - 大家的评价是，技术体系很新
-
-启动一个新的布局:
-zellij --layout /home/martins3/.dotfiles/config/zellij/docs.kdl
-
-config/zellij/default.kdl 是默认的启动布局。
-
-但是估计从 tmux 到 zellij 迁移难度比较大，需要完成如下工作：
-- [ ] 快速切换 session
-- [ ] 自动修改 tab 的名称
-- [ ] 使用 ctrl+shift+arrow 移动 tab
-- [ ] 为什么当一个 layout 含有:
-```txt
-    pane size=1 borderless=true {
-      plugin location="zellij:tab-bar"
-    }
+创建一个 session 并且让 fio 在启动运行:
+```sh
+tmux new-session -d -s my_session || true
+tmux new-window -d "fio test.fio"
 ```
-nvim 的启动首先会卡住一下，是谁的问题
-- [x] https://github.com/zellij-org/zellij/issues/1760 这个问题没有解决
-  - 打开屏幕的一堆横线，但是很快就被解决了
-  - [ ] 在 nvim 打开的一瞬间，还是存在很多横线
-- [ ] 屏幕切换的时候，中文显示有问题。
-  - 这个问题类似: https://github.com/zellij-org/zellij/issues/2256
-- [ ] [无法使用鼠标调整 pane 的大小。](https://github.com/zellij-org/zellij/issues/1262)
-- [ ] Alt + hjkl 会直接移动到下一个 tab 中去
-
-
-问题很多，没有时间一个个的修复了。
 
 ## 最近遇到的 tmux 问题
 - 有时候，nvim 报告 Clipboard 是 tmux，但是实际上下面的才是正确的
@@ -126,13 +98,22 @@ nvim 的启动首先会卡住一下，是谁的问题
   - OK: Clipboard tool found: xclip
 ```
 - 登录远程终端，在远程终端中使用 clear 或者 vim 的时候遇到
-```txtxtxtxt
+```txt
 'tmux-256color': unknown terminal type.
 ```
 https://unix.stackexchange.com/questions/574669/clearing-tmux-terminal-throws-error-tmux-256color-unknown-terminal-type
 
+## 一些试错
 
-## tmux 的悬浮窗口
+1. 自动连接远程的 server 的 tmux，这样就可以一次有一次使用 ssh 创建 remote terminal 了
+```sh
+ssh -t user@11.22.33.44 "tmux attach || /usr/bin/tmux"
+```
+当然，可以将这个行为定义为你的 terminal emulator (例如 ketty 或者 wezterm)的一个快捷键。
+
+2. tmux list-keys 用于查看已经绑定的快捷键
+
+2. tmux 的悬浮窗口
 配置参考: https://gist.github.com/LintaoAmons/22f6184b26bd5b93d8fe9f9276f50f75
 ```txt
 bind-key -n -N 'Toggle popup window' C-h if-shell -F '#{==:#{session_name},popup}' {
@@ -141,20 +122,8 @@ bind-key -n -N 'Toggle popup window' C-h if-shell -F '#{==:#{session_name},popup
     display-popup -d "#{pane_current_path}" -xC -yC -w 60% -h 75% -E "tmux attach-session -t popup || tmux new-session -s popup"
 }
 ```
-向比 zellij 好处是可以继续多开，但是问题是，让 switch to next session 命令完全混乱了。
+向比 zellij 好处是可以继续多开，但是问题是这会让 switch to next session 命令完全混乱了。
 其实我们希望 popup 的是一个 pane 而不是 session 的。所以最后还是靠 nvim 的悬浮窗来解决问题吧。
-
-## 一些小技巧
-
-1. 自动连接远程的 server 的 tmux，这样就可以一次有一次使用 ssh 创建 remote terminal 了
-```sh
-ssh -t user@11.22.33.44 "tmux attach || /usr/bin/tmux"
-```
-当然，如果你恰好使用 kitty，可以将这个行为定义为一个快捷键。
-
-2. tmux list-keys
-
-用于查看已经绑定的快捷键
 
 3. 嵌套 tmux 是一个死亡深渊，没有必要尝试。
   - 如果在本地的一个 tmux 中嵌套，tmux 会直接警告你。
@@ -166,6 +135,7 @@ ssh -t user@11.22.33.44 "tmux attach || /usr/bin/tmux"
 - [tmuxinator](https://github.com/tmuxinator/tmuxinator) 可以实现 kitty 的 session 的管理
 - [Tmux-Tutorial](https://leimao.github.io/blog/Tmux-Tutorial/)
   - https://news.ycombinator.com/item?id=21055468
+- [catppuccin 主题](https://github.com/catppuccin/tmux)
 
 
 <script src="https://giscus.app/client.js"

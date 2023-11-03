@@ -14,8 +14,8 @@ local function get_font_size()
     local raw_os_name = io.popen("lscpu |lscpu | grep -o  AMD-V", "r"):read("*l")
     -- amd 上使用的是一个 2k 32 寸 显示器
     if raw_os_name == "AMD-V" then
-      -- return 12.2
-      return 9.5 -- 内置屏幕
+      return 12.2
+      -- return 9.5 -- 内置屏幕
     end
   end
 
@@ -133,6 +133,14 @@ return {
       }),
       -- action = wezterm.action.ShowLauncher
     },
+    {
+      key = "m",
+      mods = "CTRL",
+      action = wezterm.action.SpawnCommandInNewTab({
+        args = { "ssh", "-t", "-p5556", "root@localhost", "zellij attach || zellij" },
+      }),
+      -- action = wezterm.action.ShowLauncher
+    },
     { key = "F2", mods = "", action = wezterm.action.ShowLauncher },
   },
   adjust_window_size_when_changing_font_size = false,
@@ -185,7 +193,7 @@ return {
   },
   -- 这两个配置是互斥的，前面那个是使用模糊颜色，后面使用图片
   -- >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-  window_background_opacity = 0.8,
+  window_background_opacity = 1.0,
   window_background_gradient = {
     orientation = "Vertical",
     interpolation = "Linear",

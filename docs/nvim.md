@@ -45,21 +45,17 @@
   * [Session](#session)
   * [快速移动](#快速移动)
   * [输入法自动切换](#输入法自动切换)
-  * [远程 server 上复制粘贴](#远程-server-上复制粘贴)
+  * [从远程 server 上复制粘贴](#从远程-server-上复制粘贴)
 * [本配置源代码解释](#本配置源代码解释)
 * [FAQ](#faq)
 * [vim 的小技巧](#vim-的小技巧)
-* [踩坑](#踩坑)
-* [调试 vim 配置](#调试-vim-配置)
 * [值得一看的配置](#值得一看的配置)
 * [值得关注的插件](#值得关注的插件)
 * [有趣的插件](#有趣的插件)
 * [学习](#学习)
 * [找资源](#找资源)
-* [常见知识点](#常见知识点)
-* [小问题](#小问题)
-* [亟须解决的问题](#亟须解决的问题)
-* [TODO](#todo)
+* [问题](#问题)
+* [高级话题](#高级话题)
 * [衍生](#衍生)
 
 <!-- vim-markdown-toc -->
@@ -226,13 +222,12 @@ sudo apt install bear
 安装方法插件作者写的相当清晰 : https://github.com/keaising/im-select.nvim
 
 ### 安装各种 lsp
-首先尝试使用你的平台上的包管理器安装，如果不可以，那么可以具体参考各个 lsp 的文档:
 
-1. [marksman](https://github.com/artempyanykh/marksman/blob/main/docs/install.md)
-2. [efm](https://github.com/mattn/efm-langserver#installation)
-3. [ccls](https://github.com/MaskRay/ccls/wiki/Install)
+通过 [mason](https://github.com/williamboman/mason.nvim) 可以自动的安装各种 lsp，
+在 neovim 中执行 `:Mason` 可以检查各种插件的执行状态。
 
-当然，遇到了什么问题也可以找我讨论。
+对于 mason 不支持的 lsp，就需要手动安装了:
+- [ccls](https://github.com/MaskRay/ccls/wiki/Install)
 
 ### 安装本配置
 
@@ -290,7 +285,9 @@ let g:mapleader = ','
 
 ### 复制粘贴
 
-关于剪切板，可以 `:h registers`
+vim 支持多个剪切板，系统剪切板只是 vim 剪切板中的一个
+
+通过 ":h registers" 可以看到 `"*` and `"+` 是对应的系统剪切板
 
 > 8. Selection registers `"*` and `"+`
 >    Use these registers for storing and retrieving the selected text for the GUI.
@@ -298,16 +295,22 @@ let g:mapleader = ','
 >    working, the unnamed register is used instead. For Unix systems and Mac OS X,
 >    see |primary-selection|.
 
-简而言之，就是 vim 存在很多剪切板，当在浏览器中复制的内容，实际上被存放到了 `+` 这个 register 中了，
-为了粘贴到 vim 中，就需要使用 `"` `+` `p` 了，为了加快这个操作，可以重新映射一些键位。
+当在浏览器中复制的内容，实际上被存放到了 `+` 这个 register 中了，
+为了粘贴到 vim 中，就需要使用 `"` `+` `p` 了，其含义为:
+1. `"` : 使用寄存器
+2. `+` : 选择系统剪切板这个寄存器
+3. `p` : 粘贴
 
+由于本配置使用了 [which-key.nvim](https://github.com/folke/which-key.nvim)，所以可以
+在 normal mode 中使用 `"` 或者在 insert mode 中使用 `<C-r>` 来展示 register 的内容。
+
+为了加快这个操作，可以重新映射一些键位。
 ```vim
 map <leader>y "+y
 map <leader>p "+p
 map <leader>d "+d
 ```
-
-`,` `y` 和 `,` `p` 实现复制粘贴，`,` `d` 删除到系统剪切板中。
+所以现在可以使用，`,` `y` 和 `,` `p` 实现复制粘贴，`,` `d` 删除到系统剪切板中。
 
 ### 符号搜索
 
@@ -488,13 +491,12 @@ neovim 中有内置调试功能 [Termdebug](https://fzheng.me/2018/05/28/termdeb
 | <img src="./img/debug.png" /> |
 
 一种更强大的方法是通过 [nvim-dap](https://github.com/mfussenegger/nvim-dap) 来构建，但是现在还不成熟:
-
 - 需要安装多个插件；
-- 配置文件比较复杂。
-
-尝试过一次，但是放弃了，对应的代码在[这个位置](https://github.com/Martins3/My-Linux-Config/tree/debug/nvim/lua/debugxx)。
+- 配置文件比较复杂，尝试过一次，但是放弃了，对应的代码在[这个位置](https://github.com/Martins3/My-Linux-Config/tree/debug/nvim/lua/debugxx)。
 
 此外还有插件 [nvim-gdb](https://github.com/sakhnik/nvim-gdb) ，也许可以勉强维持生活。
+
+[gdb-frontend](https://oguzhaneroglu.com/projects/gdb-frontend/) 看上去不错，利用浏览器提供了一个相当精致的界面
 
 但是无论如何，使用 debugger 来找 bug 不是一个好习惯，应该是靠清晰的代码结构和单元测试[^2]。
 
@@ -593,6 +595,8 @@ vim 基本的移动技术，例如 e b w G gg 之类的就不说了， 下面简
 
 进行跳转的时候，前两个字符可以直接敲下去，而第三个字符需要看 easy mothion 的设置。
 
+如果想要让自己彻底的移除掉低效移动的坏习惯，还是得靠 [m4xshen/hardtime.nvim](https://github.com/m4xshen/hardtime.nvim)
+
 | binding  | function                                                                    |
 | -------- | --------------------------------------------------------------------------- |
 | `CTRL-o` | 跳转的位置的回溯                                                            |
@@ -616,36 +620,34 @@ vim 基本的移动技术，例如 e b w G gg 之类的就不说了， 下面简
 
 当我在切换到 MacOS 的时候，发现输入法的自动切换不能正常工作，最后通过这个 [commit](https://github.com/Martins3/fcitx.nvim/commit/f1c97b6821a76263a84addfe5c6fdb4178e90ca9) 进行了修复。
 
-### 远程 server 上复制粘贴
+### 从远程 server 上复制粘贴
 
 在远程 server 复制，内容会进入到远程 server 的系统剪切板中，但是你往往是想复制本地的电脑的剪切板中。
 
 使用插件 [ojroques/vim-oscyank](https://github.com/ojroques/vim-oscyank) 可以让在远程 server 的拷贝的内容直接进入到本地的系统剪切板上。
 
-原理上参考:
+增加上如下命令到 init.vim ，可以实现自动拷贝到本地电脑中
+```vim
+" "让远程的 server 内容拷贝到系统剪切板中，具体参考 https://github.com/ojroques/vim-oscyank
+autocmd TextYankPost *
+    \ if v:event.operator is 'y' && v:event.regname is '+' |
+    \ execute 'OSCYankRegister +' |
+    \ endif
 
+autocmd TextYankPost *
+    \ if v:event.operator is 'd' && v:event.regname is '+' |
+    \ execute 'OSCYankRegister +' |
+    \ endif
+```
+
+使用方法，选中的内容之后，nvim 的命令行中执行: `OSCYankVisual`
+
+原理上参考:
 - https://news.ycombinator.com/item?id=32037489
 - https://github.com/ojroques/vim-oscyank/issues/24
 
-但是还是存在一些问题，不过暂时可以接受:
-
-- 在 nvim-tree.lua 中可以使用 `yy` 将文件的绝对路径拷贝到系统剪切板中，这是拷贝远程 server 的剪切板中，而不是本地电脑的系统剪切板中。
-
-<!-- ### [可选] Scala 集成 -->
-<!-- 参考 https://github.com/scalameta/nvim-metals 中的文档: -->
-
-<!-- 安装 cs -->
-<!-- ```sh -->
-<!-- curl -fL https://github.com/coursier/launchers/raw/master/cs-x86_64-pc-linux.gz | gzip -d > cs -->
-<!-- chmod +x cs -->
-<!-- ./cs setup -->
-<!-- ``` -->
-
-<!-- 以 [chipyard](https://github.com/ucb-bar/chipyard) 为例，在项目中执行 -->
-<!-- ```sh -->
-<!-- sbt bloopInstall -->
-<!-- ``` -->
-<!-- 然后就可以自动索引了。 -->
+需要注意的是，这个功能依赖于 terminal 支持 OSC52 ，例如 Windows Terminal 就不支持，如果想在 Windows 中
+连接远程的 nvim，可以将 terminal 切换为 wezterm 等支持 OSC52 功能的终端。
 
 ## 本配置源代码解释
 
@@ -661,9 +663,9 @@ nvim 配置在仓库的位置为 ./nvim 中，其他的目录不用管，那是�
 - lua/usr
   - packer.lua : 安装的插件，按照作用放到一起，每一个插件是做什么的都有注释。
   - which-key.lua : 快捷键的配置
-  - nvim-tree.lua / orgmode.lua / ... : 插件的默认配置的调整，都非常短。
+  - nvim-tree.lua ... : 一些插件的默认配置的调整，都非常短。
   - lsp : native lsp 相关的配置
-- UltiSnips/ : 自定义的代码段
+- UltiSnips/ : 自定义的代码段，主要是 bash 相关的
 
 ## FAQ
 
@@ -674,13 +676,14 @@ nvim 配置在仓库的位置为 ./nvim 中，其他的目录不用管，那是�
   - VS Code 比 Sublime 功能更强，比 [Atom](https://atom.io/) 性能更高，而且 VSCode 可以集成 vim 。因为 VSCode 是基于 electron 的，甚至可以在一个 window 中编辑 markdown, 一个 window 实时预览 markdown 。
   - 但是 vim 可以更加简洁, 灵活和高效。
 - 我应该使用这个配置吗 ?
-  - 我认为仓库的意义是让大家使用上 vim 新特性，其实还有很多的其他的配置也非常不错，但是一些常年没有更新，以及使用老旧插件的配置就不用看。比如 `use_vim_as_ide`, [exvim](https://exvim.github.io/), [spf13-vim](https://github.com/spf13/spf13-vim), [The Ultimate vimrc](https://github.com/amix/vimrc) 之类的。
+  - 我认为仓库的意义是让大家使用上 vim 新特性，其实还有很多的其他的配置也非常不错，但是一些常年没有更新，以及使用老旧插件的配置就不用看。
+  比如 [use_vim_as_ide](https://github.com/yangyangwithgnu/use_vim_as_ide), [exvim](https://exvim.github.io/), [spf13-vim](https://github.com/spf13/spf13-vim), [The Ultimate vimrc](https://github.com/amix/vimrc) 之类的。
 - 支持什么操作系统和架构?
   - 支持 Windows ，但是需要少量的调整，主要是安装方面。
   - 对于 x86 Linux / Mac 完整的支持。
   - [龙芯架构 Linux](https://martins3.github.io/loongarch/neovim.html) 基本支持。
 - 使用 clangd 还是 ccls
-  - 两个都用过，推荐 ccls，具体原因看[这里](./ccls-vs-clangd.md)
+  - 两个都用过，但是我推荐 ccls，具体原因看[这里](./ccls-vs-clangd.md)
 
 ## vim 的小技巧
 
@@ -755,21 +758,12 @@ setxkbmap -option caps:swapescape
 
 - [https://thevaluable.dev/vim-advanced/](https://thevaluable.dev/vim-advanced/)
 
-## 踩坑
-
-1. 才知道 vim 中 [`ctrl i`实际上等同于 tab 的](https://github.com/neoclide/coc.nvim/issues/1089)，我使用 hydra 重新映射 jumplist 相关的键位。
-
-## 调试 vim 配置
-
-有时候，有的 vim 插件会出现问题，为了更好的排除不是其他的配置导致的，可以创建一个最简环境。
-参考[这个脚本](https://gist.github.com/kristijanhusak/a0cb5f4eb2bad3e732a1d18d311ebe2f)
-
 ## 值得一看的配置
 
+- [LazyVim](https://github.com/LazyVim/LazyVim) : folke 大神写的 nvim 配置
 - [kickstart.nvim](https://github.com/nvim-lua/kickstart.nvim) 这绝对是开始使用 lua 来配置的 nvim 开始的好地方。强烈推荐。
 - [LunarVim](https://github.com/LunarVim/LunarVim) 超过 15000 star 的 IDE 配置
 - [NvChad](https://github.com/NvChad/NvChad) 同上
-- [Neovim-from-scratch](https://github.com/LunarVim/Neovim-from-scratch) : LunarVim 出品的纯 lua neovim 配置，可以配套 [官方视频](https://www.youtube.com/watch?v=ctH-a-1eUME&list=PLhoH5vyxr6Qq41NFL4GvhFp-WLd5xzIzZ) 来一步步的搭建。
 - [jdhao/nvim-config](https://github.com/jdhao/nvim-config) : jdhao 的配置
 - [nyoom.nvim](https://github.com/nyoom-engineering/nyoom.nvim) : 纯 fennel
 
@@ -787,6 +781,8 @@ setxkbmap -option caps:swapescape
 - [nvim-metals](https://github.com/scalameta/nvim-metals) : 芯片前端开发必备
 - [vs-tasks.nvim](https://github.com/EthanJWright/vs-tasks.nvim) : Code Runner
 - [NeoComposer](https://github.com/ecthelionvi/NeoComposer.nvim) : 更好地使用 macro
+- [gesture.nvim](https://github.com/notomo/gesture.nvim) : nvim 中鼠标还可以这样用?
+- [legendary.nvim](https://github.com/mrjones2014/legendary.nvim) :  据说比 which-key 好用
 
 ## 有趣的插件
 
@@ -805,40 +801,26 @@ setxkbmap -option caps:swapescape
 1. [vimcolorschemes](https://vimcolorschemes.com/) vim 主题网站
 2. [awesome neovim](https://github.com/rockerBOO/awesome-neovim)
 
-## 常见知识点
+## 问题
+- 极为细节的问题，但是折腾下应该还是可解的
+  - shellcheck 无法处理 source 其他的文件的情况。
+  - ,s 的时候，正好匹配的那个总是不是第一个，检查一下 telescope
+  - https://github.com/ranjithshegde/ccls.nvim : treesitter 跳转到函数头还是不精准
+  - https://github.com/uga-rosa/cmp-dictionary/wiki/Examples-of-usage : 补全中没有 10K words 这种数据来源
+  - https://github.com/koalaman/shellcheck/issues/1284
+  - https://www.trickster.dev/post/vim-is-touch-typing-on-steroids/ : 从后往前阅读
+  - leap.nvim 似乎特殊处理过 f/F 以及 t/T 的
+  - [neodim](https://github.com/zbirenbaum/neodim) : 等待升级到 0.10
+  - crusj/bookmarks.nvim 需要配置 virt_pattern，感觉多次一举
+- nvim 有待解决的问题，不是一时半会可以解决的:
+  1. 编辑远程代码: 最佳状态是 vscode 的那种模式，收集一些替代，虽然都差的很远
+     - https://github.com/jamestthompson3/nvim-remote-containers
+     - https://github.com/OscarCreator/rsync.nvim
+      - 但是 rsync 时间戳似乎维护的有问题，经常遇到这个问题: make: warning:  Clock skew detected.  Your build may be incomplete.
+  2. [gcov](https://marketplace.visualstudio.com/items?itemName=JacquesLucke.gcov-viewer)
 
-- [vim 中 `<cr>` 和 `<enter>` 有什么区别](https://www.reddit.com/r/vim/comments/u2989c/what_is_the_difference_between_cr_and_enter/)
-  - 没有区别，除了拼写不同
-- [使用 sudo 保存一个文件](https://stackoverflow.com/questions/2600783/how-does-the-vim-write-with-sudo-trick-work)
-  - `w !sudo tee %`
-- [如何删除每一行的第一个字符](https://stackoverflow.com/questions/1568115/delete-first-word-of-each-line)
-  - `:%norm dw`
-
-## 小问题
-
-极为细节的问题，但是折腾下应该还是可解的
-
-- shellcheck 无法处理 source 其他的文件的情况。
-- ,s 的时候，正好匹配的那个总是不是第一个，检查一下 telescope
-- https://github.com/ranjithshegde/ccls.nvim : treesitter 跳转到函数头还是不精准
-- https://github.com/uga-rosa/cmp-dictionary/wiki/Examples-of-usage : 补全中没有 10K words 这种数据来源
-
-## 亟须解决的问题
-
-1. 编辑远程代码: 最佳状态是 vscode 的那种模式，收集一些替代，虽然都差的很远
-   - https://github.com/jamestthompson3/nvim-remote-containers
-   - https://github.com/OscarCreator/rsync.nvim
-   - https://github.com/chipsenkbeil/distant.nvim
-2. [gcov](https://marketplace.visualstudio.com/items?itemName=JacquesLucke.gcov-viewer)
-3. 调试，目前社区在尝试的方案主要是 dap
-   - https://github.com/jbyuki/one-small-step-for-vimkind
-   - https://github.com/nvim-lua/kickstart.nvim/blob/master/lua/kickstart/plugins/debug.lua
-
-## TODO
-
-3. https://github.com/koalaman/shellcheck/issues/1284
-4. https://www.trickster.dev/post/vim-is-touch-typing-on-steroids/ : 从后往前阅读
-5. https://todoist.com/zh-CN/templates ; 重新审视一下 orgmode 的作用
+## 高级话题
+- [高级话题](./nvim-advantace.md)，至少对于我来说比较高级 🤣
 
 ## 衍生
 
@@ -850,7 +832,8 @@ setxkbmap -option caps:swapescape
 6. [qutebrowser](https://github.com/qutebrowser/qutebrowser) : 基于 Python 和 Qt 构建的 vim 快捷键的浏览器
 7. [helix](https://github.com/helix-editor/helix) : 和 neovim 类似，号称更加 modern 的编辑器
 8. [vim-keybindings-everywhere-the-ultimate-list](https://github.com/erikw/vim-keybindings-everywhere-the-ultimate-list) : 在其他程序中使用 vim 的键位映射。
-9. [nyoom.nvim](https://github.com/nyoom-engineering/nyoom.nvim) : 纯 fennel
+9. [nyoom.nvim](https://github.com/nyoom-engineering/nyoom.nvim) : 纯 fennel nvim 配置
+
 
 [^2]: [I do not use a debugger](https://lemire.me/blog/2016/06/21/i-do-not-use-a-debugger/)
 [^3]: [The normal command](https://www.reddit.com/r/vim/comments/tbz449/norm_macros_are_great/)

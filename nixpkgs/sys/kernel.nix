@@ -7,27 +7,17 @@
   };
 
   boot.kernelParams = [
-    "transparent_hugepage=always"
-    # https://gist.github.com/rizalp/ff74fd9ededb076e6102fc0b636bd52b
-    # 十次测量编译内核，打开和不打开的性能差别为 : 131.1  143.4
-    # 性能提升 9.38%
-    # "noibpb"
-    # "nopti"
-    # "nospectre_v2"
-    # "nospectre_v1"
-    # "l1tf=off"
-    # "nospec_store_bypass_disable"
-    # "no_stf_barrier"
-    # "mds=off"
-    # "mitigations=off"
+    "transparent_hugepage=never"
+    "mitigations=off"
     # 硬件上都直接不支持了
     # "tsx=on"
     # "tsx_async_abort=off"
 
-    # vfio 直通
+    # intel_iommu 需要手动打开
+    # 不信请看 zcat /proc/config.gz | grep CONFIG_INTEL_IOMMU_DEFAULT_ON
     # "intel_iommu=on"
-    # "intremap=on"
     # "iommu=pt"
+    "intremap=off"
     # "amd_iommu_intr=vapic"
     # "kvm-amd.avic=1"
     # "isolcpus=28-31"
@@ -71,11 +61,9 @@ boot.kernelPatches = [
   }
 
   {
-    name = "lru";
+    name = "lru_gen";
     patch = null;
     extraStructuredConfig = {
-      LRU_GEN=lib.kernel.yes;
-      LRU_GEN_ENABLED=lib.kernel.yes;
       LRU_GEN_STATS=lib.kernel.yes;
     };
   }
@@ -88,6 +76,15 @@ boot.kernelPatches = [
     };
   }
 
+  {
+    name = "irq";
+    patch = null;
+    extraStructuredConfig = {
+      GENERIC_IRQ_DEBUGFS=lib.kernel.yes;
+    };
+  }
+
+
   # 增加一个 patch 的方法
   /*
   {
@@ -97,5 +94,9 @@ boot.kernelPatches = [
     patch = /home/martins3/.dotfiles/nixpkgs/patches/amd_iommu.patch;
   }
   */
+  {
+    name = "dma-ops";
+    patch = /home/martins3/.dotfiles/nixpkgs/patches/dma_ops.patch;
+  }
   ];
 }

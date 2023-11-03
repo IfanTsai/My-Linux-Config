@@ -11,6 +11,7 @@ in
   imports = [
     ./sys/cli.nix
     ./sys/kernel.nix
+    # ./sys/kernel-419.nix
     ./sys/gui.nix # @todo 这个需要学习下 nix 语言了
   ] ++ (if (builtins.getEnv "DISPLAY") != ""
   then [
@@ -26,13 +27,11 @@ in
   time.hardwareClockInLocalTime = true;
 
   # nvidia GPU card configuration, for details,
+  # 注意: 如果你和我一样，用的是老显卡，将  open = true; 注释掉
   # see https://nixos.wiki/wiki/Nvidia
-  # services.xserver.videoDrivers = [ "nvidia" ];
-  # hardware.opengl.enable = true;
-  # .beta 可以替换为其他的版本，其中 beta 是最新的
-  # hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.beta;
 
   programs.zsh.enable = true;
+
 
   nixpkgs.overlays = [
     (let
@@ -165,6 +164,9 @@ in
         # assuming /boot is the mount point of the  EFI partition in NixOS (as the installation section recommends).
         efiSysMountPoint = "/boot";
       };
+
+      systemd-boot.configurationLimit = 10;
+
       grub = {
         # https://www.reddit.com/r/NixOS/comments/wjskae/how_can_i_change_grub_theme_from_the/
         # theme = pkgs.nixos-grub2-theme;
@@ -307,8 +309,8 @@ in
   # programs.steam.enable = true; # steam 安装
 
   # 参考 https://gist.github.com/CRTified/43b7ce84cd238673f7f24652c85980b3
-  boot.kernelModules = [ "vfio_pci" "vfio_iommu_type1" "vmd" "iommu_v2"];
-  boot.initrd.kernelModules = ["iommu_v2"];
+  boot.kernelModules = [ "vfio_pci" "vfio_iommu_type1" "vmd" ];
+  boot.initrd.kernelModules = [];
   boot.blacklistedKernelModules = [ "nouveau" ];
 
   services.samba = {
@@ -337,7 +339,7 @@ in
   };
 
   boot.kernel.sysctl = {
-    "vm.swappiness" = 200;
+    # "vm.swappiness" = 200;
     "vm.overcommit_memory" = 1;
   };
 

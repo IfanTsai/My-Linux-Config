@@ -41,6 +41,7 @@ function ohmyzsh() {
 	if [[ ! -d /root/.oh-my-zsh ]]; then
 		sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 		git clone https://github.com/zsh-users/zsh-autosuggestions "${ZSH_CUSTOM:-~/.oh-my-zsh/custom}"/plugins/zsh-autosuggestions
+		sed -i "s/plugins=(git)/plugins=(git zsh-autosuggestions)/g" /root/.oh-my-zsh
 	fi
 }
 
@@ -129,7 +130,10 @@ rw=randread
 runtime=30
 time_based
 EOF
+}
 
+function setup_zellij() {
+	echo "TODO"
 }
 
 cd ~
@@ -155,3 +159,4 @@ setup_tig
 setup_libcgroup
 setup_stress-ng
 setup_fio
+setup_zellij

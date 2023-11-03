@@ -23,9 +23,6 @@ require("colorizer").setup({
     }
 })
 require("nvim-surround").setup()
-require("persisted").setup({
-    autoload = true
-})
 require("gitsigns").setup({
     signs = {
         add = {
@@ -67,6 +64,9 @@ require("nvim-lightbulb").update_lightbulb()
 require("im_select").setup()
 require("lualine").setup()
 require("rsync").setup()
+require("numb").setup()
+require("debugprint").setup()
+-- require("hardtime").setup() # 一时难以适应
 
 -- require("luasnip.loaders.from_lua").lazy_load({ paths = "~/.config/nvim/LuaSnip/" })
 require("luasnip.loaders.from_snipmate").lazy_load({
@@ -81,6 +81,7 @@ vim.api.nvim_create_autocmd({"VimLeave"}, {
     end
 })
 
+-- 导航栏
 require("aerial").setup({
     backends = {"markdown", "man", "lsp", "treesitter"},
     layout = {
@@ -91,7 +92,8 @@ require("aerial").setup({
     attach_mode = "global"
 })
 
+-- 书签
 require("bookmarks").setup({
-    mappings_enabled = false,
-    virt_pattern = {"*.lua", "*.md", "*.c", "*.h", "*.sh"}
+  mappings_enabled = false,
+  virt_pattern = { "*.lua", "*.md", "*.c", "*.h", "*.sh", "*.py" },
 })

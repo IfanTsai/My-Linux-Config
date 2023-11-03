@@ -2,12 +2,13 @@
 
 声明：
 
-- NixOS 是给程序员准备的，你需要掌握你们新的函数式编程语言。
+- NixOS 是给程序员准备的，你甚至需要掌握一门新的函数式编程语言。
 - 其次，NixOS 的入门曲线非常的陡峭。
 
-我在使用 NixOS 的时候，一度想要放弃，但是最终还是检查下来了。
-因为 NixOS 非常符合计算机的思维，相同的问题仅仅解决一次，而这个问题是
-环境配置。
+我在使用 NixOS 的时候，一度想要放弃，最终勉强坚持下来了。
+
+之所以坚持使用 NixOS ，是因为我感觉 NixOS 非常符合计算机的思维，
+那就是**相同的问题仅仅解决一次**，而这个问题是 环境配置。
 
 ## 优缺点对比
 
@@ -260,28 +261,11 @@ pip install setuptools # 结果 readonly 文件系统
 
 参考[这里](https://nixos.wiki/wiki/Python) 在 home/cli.nix 中添加上内容，但是会遇到这个问题，
 
-```txt
-building '/nix/store/x8hf86ji6hzb8ldpf996q5hmfxbg5q6l-home-manager-path.drv'...
-error: collision between `/nix/store/012yj020ia28qi5nag3j5rfjpzdly0ww-python3-3.9.13-env/bin/idle3.9' and `/nix/store/7l0dc127v4c2m3yar0bmqy9q6sfmypin-python
-3-3.9.13/bin/idle3.9'
-error: builder for '/nix/store/x8hf86ji6hzb8ldpf996q5hmfxbg5q6l-home-manager-path.drv' failed with exit code 25;
-       last 1 log lines:
-       > error: collision between `/nix/store/012yj020ia28qi5nag3j5rfjpzdly0ww-python3-3.9.13-env/bin/idle3.9' and `/nix/store/7l0dc127v4c2m3yar0bmqy9q6sfmyp
-in-python3-3.9.13/bin/idle3.9'
-       For full logs, run 'nix log /nix/store/x8hf86ji6hzb8ldpf996q5hmfxbg5q6l-home-manager-path.drv'.
-error: 1 dependencies of derivation '/nix/store/yx0w6739xc7cgkf5x6fwqvkrlqy1k647-home-manager-generation.drv' failed to build
-```
-
-发现原来是需要将
-
-```c
+```nix
   home.packages = with pkgs; [
 ```
 
-中的 python 删除就可以了。
-
-如果一个包安装不上，可以在这里:
-
+正确的解决办法是，之后，就按照正常的系统中使用 python:
 ```txt
 python -m venv .venv
 source .venv/bin/activate
@@ -414,7 +398,7 @@ make SYSSRC=$(nix-build -E '(import <nixpkgs> {}).linuxPackages_latest.kernel.de
 一种方法是:
 
 ```nix
-  /* microsoft-edge-beta = pkgs.callPackage ./programs/microsoft-edge-beta.nix {}; */
+  /* google-chrome-stable = pkgs.callPackage ./programs/google-chrome-stable.nix {}; */
   nixpkgs_unstable = import
     (builtins.fetchTarball {
       url = "https://github.com/NixOS/nixpkgs/archive/ac608199012d63453ed251b1e09784cd841774e5.tar.gz";
@@ -839,6 +823,14 @@ https://www.youtube.com/@NixCon
 ## 垃圾清理
 
 sudo nix-collect-garbage -d
+
+nix-store --gc
+sudo nixos-rebuild boot
+
+遇到了相同的问题(boot 分区满了)，头疼:
+https://discourse.nixos.org/t/what-to-do-with-a-full-boot-partition/2049/13
+
+搞了半天，这应该是是一个 bug ，这个时候需要手动删除 /boot 下的一些内容才可以。
 
 ## 包搜索
 
@@ -1418,6 +1410,8 @@ man home-configuration.nix 中搜索 dunst
 在 profiles 中右键，参考
 https://docs.cfw.lbyczf.com/contents/ui/profiles/rules.html
 
+目前使用: clash-verge
+
 ## canTouchEfiVariables 到底是什么来头
 
 https://nixos.wiki/wiki/Bootloader 中最后提到如何增加 efi
@@ -1485,3 +1479,80 @@ https://mynixos.com/
 
 ## 不知道如何调试代码，debug symbol 如何加载
 - https://nixos.wiki/wiki/Debug_Symbols
+
+## [ ] sar 无法正常使用
+```txt
+🧀  sar
+Cannot open /var/log/sa/sa21: No such file or directory
+Please check if data collecting is enabled
+```
+
+## 如何在 cgroup 中编译内核
+
+可以采用这种方法:
+```sh
+sudo cgexec -g memory:mem3 nix-shell --command "make -j32"
+```
+
+但是这种方法就不太妙了:
+```sh
+sudo cgexec -g memory:mem3 make -j32
+```
+
+## 文摘
+https://mtlynch.io/notes/nix-first-impressions/
+https://news.ycombinator.com/item?id=36387874
+https://news.ycombinator.com/item?id=32922901
+
+## 搞搞 cuda 吧
+https://nixos.org/community/teams/cuda
+
+```nix
+# Run with `nix-shell cuda-shell.nix`
+{ pkgs ? import <nixpkgs> {} }:
+pkgs.mkShell {
+   name = "cuda-env-shell";
+   buildInputs = with pkgs; [
+     git gitRepo gnupg autoconf curl
+     procps gnumake util-linux m4 gperf unzip
+     cudatoolkit linuxPackages.nvidia_x11
+     libGLU libGL
+     xorg.libXi xorg.libXmu freeglut
+     xorg.libXext xorg.libX11 xorg.libXv xorg.libXrandr zlib
+     ncurses5 stdenv.cc binutils
+   ];
+   shellHook = ''
+      export CUDA_PATH=${pkgs.cudatoolkit}
+      export LD_LIBRARY_PATH=${pkgs.linuxPackages.nvidia_x11}/lib:${pkgs.ncurses5}/lib
+      export EXTRA_LDFLAGS="-L/lib -L${pkgs.linuxPackages.nvidia_x11}/lib"
+      export EXTRA_CCFLAGS="-I/usr/include"
+   '';
+}
+```
+然后配合这个 : https://github.com/Tony-Tan/CUDA_Freshman
+
+https://news.ycombinator.com/item?id=37818570
+
+## 微信
+
+```nix
+  wrapWine_nix = pkgs.fetchurl {
+    url = "https://raw.githubusercontent.com/xieby1/nix_config/d57b5c4b1532eb5599b23c13ed063b2fa81edfa7/usr/gui/wrapWine.nix";
+    hash = "sha256-4vdks0N46J/n8r3wdChXcJbBHPrbTexEN+yMi7zAbKs=";
+  };
+  weixin_nix = pkgs.fetchurl {
+    url = "https://raw.githubusercontent.com/xieby1/nix_config/d57b5c4b1532eb5599b23c13ed063b2fa81edfa7/usr/gui/weixin.nix";
+    hash = "sha256-ql6BE/IZBM31W/yqCayAdktcV2QZ/maVzwskybFZwz0=";
+  };
+  weixin = import weixin_nix {
+    wrapWine = import wrapWine_nix { inherit pkgs; };
+  };
+```
+
+## 又一个教程
+- https://gitlab.com/engmark/nix-start
+- https://github.com/Misterio77/nix-starter-configs
+
+## 构建内核的确方便，但是构建过程不能利用 cacahe ，现在修改一个 patch 就要重新构建整个内核，很烦
+
+此外，现在 systemd 中构建一次之后，在 zsh 中还是需要重新 make 一次

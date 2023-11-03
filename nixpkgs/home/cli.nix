@@ -13,6 +13,7 @@ in
 
   home.packages = with pkgs; [
     gcc
+    gnuplot
     ccache
     mold
     go
@@ -20,16 +21,19 @@ in
     lua
     lua-language-server
     stylua
+    # TODO virt-customize -a bionic-server-cloudimg-amd64.img --root-password password:<pass>
+    # libguestfs
+    # libguestfs-appliance
+    cloud-utils
     ccls
     cargo
-    rustc
-    unstable.rust-analyzer
+    unstable.rustc
+    rustfmt
     cmake
     ov
     # zig
     gnumake
     audit # 没啥意义，用不起来
-    marksman
     yarn
     nodejs
     tmux
@@ -110,7 +114,7 @@ in
     # virt-manager @todo 这到底是个啥，需要使用上吗？
     meson
     unstable.neovim
-    efm-langserver # 集成 shellcheck
+    cheat
     # wakatime
     shellcheck
     shfmt
@@ -151,27 +155,28 @@ in
     # firecracker
     inetutils
     (python3.withPackages (p: with p; [
-      pandas
-      pygal
       ipython
-      filelock
       autopep8
-      libvirt
-      mock
-      filelock
-      grpcio
-      pytest
-      monotonic
-      libxml2
-      ansible # 自动化运维
+      pygments # 让 gdb-dashboard 支持高亮
+
+      # pandas
+      # pygal
+      # filelock
+      # libvirt
+      # mock
+      # filelock
+      # grpcio
+      # pytest
+      # monotonic
+      # libxml2
+      # ansible
     ]))
     # ruff # 类似 pyright，据说很快，但是项目太小，看不出什么优势
     # perl
-    nodePackages.pyright
     black # python formatter
     man-pages
     pre-commit
-    tiptop
+    # tiptop # TODO : 有趣的性能观测工具，可以了解下其原理
     atop
     nmon
     man-pages-posix
@@ -186,6 +191,8 @@ in
     acpica-tools
     asciidoc
     # iscsi # @todo 尚未使用过
+    lsscsi
+    sg3_utils # 提供 scsi_logging_level
     targetcli
     fio
     genact # A nonsense activity generator
@@ -207,14 +214,12 @@ in
     procs # better ps
     tokei # 代码统计工具，比 cloc 性能好
     unstable.zellij # tmux 替代品
-    stagit # git static site generator 相当有趣
-    sshfs
     # kvmtool
     packer # 制作 qcow2 镜像
-    (import (fetchTarball https://github.com/cachix/devenv/archive/v0.5.tar.gz)) # @todo 和 default.nix 有区别？
+    (import (fetchTarball "https://github.com/cachix/devenv/archive/v0.5.tar.gz")) # @todo 和 default.nix 有区别？
     bridge-utils
     swtpm # windows 11 启动需要
-    unstable.nushell
+    # unstable.nushell
     libnotify # 通知小工具
     # 才知道在 Linux 下也是可以用的 pwsh
     # 在 nixos 23.04 这个版本中，暂时因为 ssl 的版本，不能使用
@@ -231,7 +236,6 @@ in
     # dockerTools @todo # 使用 nixos 构建 docker
     # https://nixos.org/manual/nixpkgs/stable/#sec-pkgs-dockerTools
     asciiquarium
-    # ipmiview # supermicro 服务器配套设施，装不上
     bc # bash 数值计算
 
     verilator # Fast and robust (System)Verilog simulator/compiler
@@ -242,12 +246,25 @@ in
     nyancat # 彩虹猫咪
     dig # dns分析
     iptraf-ng # 网络流量分析
+    nvitop
     glances # 又一个 htop
+
     zenith-nvidia # TODO
     smartmontools # 监视硬盘健康
     httpie # http baidu.com
 
     lcov
+
+    czkawka # 垃圾文件清理
+    ipmitool
+
+    cachix # nixos 的高级玩法，自己架设 binary cache
+
+    # lsp
+    unstable.rust-analyzer
+    efm-langserver # 集成 shellcheck
+    marksman
+    nodePackages.pyright
   ];
 
   programs.zsh = {
@@ -294,9 +311,16 @@ in
         smtpencryption = "tls";
         smtpserverport = 587;
         smtpuser = "xueshi.hu@smartx.com";
+        # 参考
+        # https://www.marcusfolkesson.se/blog/get_maintainers-and-git-send-email/
+        linux={
+            tocmd ="/home/martins3/core/linux/scripts/get_maintainer.pl --nogit --nogit-fallback --norolestats --nol";
+            cccmd ="/home/martins3/core/linux/scripts/get_maintainer.pl --nogit --nogit-fallback --norolestats --nom";
+        };
       };
       pretty={
         fixes = "Fixes: %h (\"%s\")";
+        commit = "commit %h (\"%s\")";
       };
       interactive = {
         diffFilter = "delta --color-only";
@@ -332,6 +356,8 @@ in
         # 优雅的打印
         # https://stackoverflow.com/questions/6191138/how-to-see-commits-that-were-merged-in-to-a-merge-commit
         adog = "log --all --decorate --oneline --graph";
+        kernel = "log -n 1 --pretty=commit";
+        bug = "log -n 1 --pretty=fixes";
       };
     };
   };
