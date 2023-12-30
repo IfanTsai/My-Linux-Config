@@ -231,14 +231,31 @@ in
   # systemctl --user list-timers --all
   systemd.user.timers.kernel = {
     enable = true;
-    timerConfig = { OnCalendar = "*-*-* 4:00:00"; };
+    # timerConfig = { OnCalendar = "*-*-* 4:00:00"; };
+    timerConfig = { OnCalendar = "Fri *-*-* 4:00:00"; }; #  周五早上四点运行一次
     wantedBy = [ "timers.target" ];
   };
 
   systemd.user.timers.qemu = {
     enable = true;
-    timerConfig = { OnCalendar = "*-*-* 4:30:00"; };
+    timerConfig = { OnCalendar = "Fri *-*-* 4:00:00"; };
     wantedBy = [ "timers.target" ];
+  };
+
+  systemd.user.timers.drink_water = {
+    enable = true;
+    timerConfig = { OnCalendar="*:0/5"; };
+    wantedBy = [ "timers.target" ];
+  };
+
+  systemd.user.services.drink_water = {
+    enable = true;
+    unitConfig = { };
+    serviceConfig = {
+      Type = "forking";
+      ExecStart = "/run/current-system/sw/bin/bash /home/martins3/.dotfiles/scripts/systemd/drink_water.sh";
+      Restart = "no";
+    };
   };
 
   systemd.user.services.qemu = {
@@ -308,10 +325,15 @@ in
   nixpkgs.config.allowUnfree = true;
   # programs.steam.enable = true; # steam 安装
 
-  # 参考 https://gist.github.com/CRTified/43b7ce84cd238673f7f24652c85980b3
-  boot.kernelModules = [ "vfio_pci" "vfio_iommu_type1" "vmd" ];
+  # @todo 加入的 vfio 参考 https://gist.github.com/CRTified/43b7ce84cd238673f7f24652c85980b3 不过他的感觉也是瞎写的
+  boot.kernelModules = [ "vfio_pci" "vfio_iommu_type1"
+    "vmd" "null_blk" "scsi_debug" "vhost_net" ];
   boot.initrd.kernelModules = [];
   boot.blacklistedKernelModules = [ "nouveau" ];
+
+  boot.extraModprobeConfig = ''
+  options scsi_debug dev_size_mb=100
+'';
 
   services.samba = {
     enable = true;

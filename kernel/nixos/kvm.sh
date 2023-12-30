@@ -107,6 +107,11 @@ sudo insmod ./arch/x86/kvm/kvm.ko
 sudo insmod ./arch/x86/kvm/kvm-intel.ko
 sudo insmod ./arch/x86/kvm/kvm-amd.ko
 
+gum confirm "Continue to build rpm?" || exit 0
+# TODO 这样编译出来的 rpm 为什么这么大啊
+exe "make binrpm-pkg -j32"
+
+
 # TODO 靠，还是有点问题，难道需要一开始就设置 id 吗?
 # TODO 还是其实，从来都没有成功过
 #
@@ -115,3 +120,9 @@ sudo insmod ./arch/x86/kvm/kvm-amd.ko
 
 # sudo modprobe kvm-intel
 # kvm.ko 和 kvm-intel.ko 是配套的
+#
+
+
+# 看看: Documentation/kbuild/reproducible-builds.rst
+# 如果利用 stable 的 kernel 的 tree
+# https://kernel.googlesource.com/pub/scm/linux/kernel/git/stable/linux.git

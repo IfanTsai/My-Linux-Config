@@ -1,18 +1,18 @@
 -- 在 https://github.com/williamboman/mason-lspconfig.nvim 中含有所有支持的 lsp
 local servers = {
-  "lua_ls",
-  "nil_ls",
+  "bashls",
   "cssls",
+  "efm",
   "html",
-  -- "tsserver",
+  "jsonls",
+  "lua_ls",
+  "marksman",
   "pyright",
   "rust_analyzer",
-  "jsonls",
-  "yamlls",
-  "efm",
   "vimls",
-  "marksman",
   "gopls",
+  "yamlls",
+  -- "tsserver",
 }
 
 local settings = {

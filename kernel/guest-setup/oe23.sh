@@ -4,7 +4,9 @@ set -E -e -u -o pipefail
 cd "$(dirname "$0")"
 
 function install() {
-	yum install -y "$1"
+	for i in "${@:1}"; do
+		yum install -y "$i"
+	done
 }
 
 # on centos 7
@@ -38,10 +40,10 @@ function setup_libcgroup() {
 # https://github.com/zsh-users/zsh-autosuggestions/blob/master/INSTALL.md#oh-my-zsh
 function ohmyzsh() {
 	yum install -y zsh git
-	if [[ ! -d /root/.oh-my-zsh ]]; then
+	if [[ ! -d ~/.oh-my-zsh ]]; then
 		sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 		git clone https://github.com/zsh-users/zsh-autosuggestions "${ZSH_CUSTOM:-~/.oh-my-zsh/custom}"/plugins/zsh-autosuggestions
-		sed -i "s/plugins=(git)/plugins=(git zsh-autosuggestions)/g" /root/.oh-my-zsh
+		sed -i "s/plugins=(git)/plugins=(git zsh-autosuggestions)/g" ~/.zshrc
 	fi
 }
 
@@ -127,12 +129,32 @@ bs=4k
 direct=1
 filename=/dev/nvme0n1
 rw=randread
-runtime=30
+runtime=30000
 time_based
 EOF
 }
 
 function setup_zellij() {
+	echo "TODO"
+}
+
+function setup_fzf() {
+	echo " https://github.com/junegunn/fzf/blob/master/BUILD.md"
+}
+
+function setup_initramfs() {
+	scp /boot/initramfs-"$(uname -r)".img martins3@10.0.2.2:/tmp
+}
+
+function setup_partid() {
+	echo "TODO : 获取到 root partuuid ，拷贝取出"
+}
+
+function remove_paswd() {
+	echo "TODO"
+}
+
+function setup_pcm() {
 	echo "TODO"
 }
 
@@ -142,12 +164,15 @@ cd ~
 mkdir /root/bin
 install autoconf
 install automake
-install libtool systemd-devel
+install libtool
+install systemd-devel
+install bcc
 
-install vim htop perf elfutils elfutils-libelf-devel cpupowerutils
+install vim htop perf elfutils elfutils-libelf-devel iperf3 sysstat
+
 
 install pam-devel
-install numactl fio
+install numactl fio libaio-devel
 install flex flex-devel bios bison-devel
 install ncurses-devel # tig 依赖
 install tree
@@ -160,3 +185,4 @@ setup_libcgroup
 setup_stress-ng
 setup_fio
 setup_zellij
+setup_fzf

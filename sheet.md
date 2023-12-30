@@ -1,4 +1,3 @@
-## edit:
 
 - "| 单位 | 向左移动 | 向右移动 | 向左删除 | 向右删除 |"
 - "| 字符 | Ctrl + B | Ctrl + F | Ctrl + H | Ctrl + D |"
@@ -35,6 +34,9 @@
   - 将没有被跟踪的文件添加到 .gitignore 中
 - git reset : 将所有的内容 unstage
 - git checkout -- fs/ : 将 unstage 的修改删除掉
+
+### submodule
+- git submodule update --recursive
 
 ### git log
 
@@ -81,12 +83,18 @@ patch -p1 < /path/to/some.patch
 git add .
 git am --continue
 
+
+### git checkout to remote branch
+
+git fetch
+git switch dev
+
 ## redirect
 
 - https://wizardzines.com/comics/redirects/
 - ls > /dev/null
 - ls 2> /dev/null
-- ls &> /dev/null
+- ls &> /dev/null # 使用 bash 即可
 - cat < file
 
 ## python
@@ -96,12 +104,13 @@ git am --continue
 
 ## grep
 
-- "-o, --only-matching : 仅仅打印匹配的部分而不是该行"
-- "grep -nr 'yourString.\*' . : rg 没有的时候用下, -r 表示 recursive"
-- "grep -e aaa -e bbb : 同时搜索两个"
-- "grep -n -C 2 something \* : -C 2 表示展示行数 -n 展示行号"
+- -o, --only-matching : 仅仅打印匹配的部分而不是该行
+- grep -nr 'yourString.\*' . : rg 没有的时候用下, -r 表示 recursive
+- grep -e aaa -e bbb : 同时搜索两个
+- grep -n -C 2 something \* : -C 2 表示展示行数 -n 展示行号
 - grep -r . /sys/module/zswap/parameters/
   - 打印的同时又展示出来数值
+  - 或者 cd /sys/module/zswap/parameters/ && grep -r .
 
 ## printf
 
@@ -128,7 +137,7 @@ git am --continue
 - ps -elf # @todo 这个几个都是啥含义
 - ps aux --sort -rss # 对于内存数量排序
 
-## vimscript:
+## vimscript
 
 - "调试方法 echom 然后 :message 查看，注意不能是 echo"
 
@@ -139,7 +148,7 @@ git am --continue
 - \r 是换行
 - :%s/$/abc/ 来给每一行的最后增加 abc
 
-## screen:
+## screen
 
 - screen -d -m sleep 1000
 - screen -r
@@ -187,3 +196,15 @@ git am --continue
 
 ## rg
 rg -l blk_update_request
+
+
+## wget
+递归拷贝:
+https://stackoverflow.com/questions/273743/using-wget-to-recursively-fetch-a-directory-with-arbitrary-files-in-it
+
+
+## fd
+fd 使用的是 regex
+```sh
+fd ".*\.md" | wc -l
+```

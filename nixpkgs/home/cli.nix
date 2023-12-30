@@ -18,6 +18,7 @@ in
     mold
     go
     ventoy
+    # uutils-coreutils @todo 到时候尝试下 rust 的 coreutils
     lua
     lua-language-server
     stylua
@@ -25,13 +26,19 @@ in
     # libguestfs
     # libguestfs-appliance
     cloud-utils
+    imagemagick # 压缩照片
+    adoptopenjdk-icedtea-web
     ccls
     cargo
     unstable.rustc
     rustfmt
     cmake
-    ov
+    ov # feature rich pager
     # zig
+    dracut
+    iw
+    termshark
+    openvswitch
     gnumake
     audit # 没啥意义，用不起来
     yarn
@@ -40,13 +47,14 @@ in
     tmuxp
     pueue # TODO 研究下这个怎么利用
     screen
+    clash-meta
     tig
     xclip # x clipboard
     wl-clipboard # wayland clipboard
     jq
     aspell
     aspellDicts.en
-    yq-go
+    # yq-go
     xplr
     htop
     btop
@@ -62,7 +70,7 @@ in
     exa # more powerful ls
     oh-my-posh # @todo for powershell
     gource
-    neofetch
+    unstable.fastfetch
     bear
     tree
     fd
@@ -88,17 +96,16 @@ in
     proxychains-ng
     sshpass
     gping # better ping
-    auto-cpufreq
-    frp
     pingu # interesting ping
+    auto-cpufreq
+    # frp # 反向代理
     nbd
     kmon # 方便的管理内核模块
     numactl
+    # numatop # CPU 根本不支持
     kexec-tools
-    helix # modern neovim
     rpm
     stress-ng
-    numatop
     OVMFFull # 存储在 /run/libvirt/nix-ovmf/ 下
     # 通过 tweaks 调整开机自启动
     gnome3.gnome-tweaks # @todo 确定是这里设置的，还是只是一个 extension
@@ -114,6 +121,7 @@ in
     # virt-manager @todo 这到底是个啥，需要使用上吗？
     meson
     unstable.neovim
+    # helix # modern neovim
     cheat
     # wakatime
     shellcheck
@@ -121,7 +129,12 @@ in
     tree-sitter
     systeroid
     linuxKernel.packages.linux_5_15.perf
-    # @todo 也许替换为 linuxPackages_latest.perf
+    # linuxPackages_6_5.perf
+    # 当 perf linuxPackages_6_5.perf 的时候，使用如下命令
+    # sudo perf record --call-graph dwarf -p 200454 -- sleep 10
+    # 必然导致 guest crash
+    #
+    # linuxPackages_latest.perf
     iperf
     # linuxPackages_latest.systemtap # 似乎这个让 libvirt 的编译开始依赖 systemdtab 的头文件了
     # 其实也不能用
@@ -132,14 +145,13 @@ in
     heaptrack
     kernelshark
     trace-cmd
-    ltrace # library trace
+    # ltrace # library trace
     unstable.bcc
     # @todo 不知道为什么居然又两个程序
     # 应该对应的这个: https://github.com/libbpf/bpftool/tree/master/src
     bpftool
     bpftools
     acpi
-    liburing
     cpuid
     # @todo https://github.com/kkharji/sqlite.lua/issues/28
     # 需要设置 libsqlite3.so 的位置
@@ -207,7 +219,7 @@ in
     powertop # 分析功耗
     lm_sensors # 获取 CPU 温度
     libxfs # @todo 使用 sudo mkfs.xfs -f /dev/sda1 还是需要 nix-shell -p libxfs
-    # @todo 使用了 xfs 之后，测试磁盘 IOPS 明显不对
+    bcachefs-tools
     libcgroup
     cpulimit
     bat # better cat
@@ -238,7 +250,7 @@ in
     asciiquarium
     bc # bash 数值计算
 
-    verilator # Fast and robust (System)Verilog simulator/compiler
+    # verilator # Fast and robust (System)Verilog simulator/compiler
 
     cowsay
     figlet # 艺术字
@@ -258,13 +270,17 @@ in
     czkawka # 垃圾文件清理
     ipmitool
 
-    cachix # nixos 的高级玩法，自己架设 binary cache
+    # cachix # nixos 的高级玩法，自己架设 binary cache
 
     # lsp
     unstable.rust-analyzer
     efm-langserver # 集成 shellcheck
     marksman
     nodePackages.pyright
+
+    # 为了方便，将常见的 c 库直接放出来
+    libaio
+    liburing
   ];
 
   programs.zsh = {

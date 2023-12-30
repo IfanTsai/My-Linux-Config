@@ -215,13 +215,14 @@ nix-env -qaPA nixos.nodePackages
 
 ```sh
 npm install -g @lint-md/cli@beta
-npm i -g bash-language-server
-npm install -g vim-language-server
+# npm i -g bash-language-server
+# npm install -g vim-language-server
 npm install -g prettier
+# npm install -g @microsoft/inshellisense
 ```
 
 设置代理现在可以在 nixos 中配置了:
-```c
+```sh
 npm config set registry https://registry.npm.taobao.org/  # 设置 npm 镜像源为淘宝镜像
 yarn config set registry https://registry.npm.taobao.org/  # 设置 yarn 镜像源为淘宝镜像
 ```
@@ -451,7 +452,6 @@ nix eval -f begin.nix
   - 无法同时安装 gcc 和 clang
 
 ## blog
-[my first expression of nix](https://news.ycombinator.com/item?id=36387874_)
 
 [Are We Getting Too Many Immutable Distributions?](https://linuxgamingcentral.com/posts/are-we-getting-too-many-immutable-distros/)
 
@@ -962,26 +962,10 @@ xfs_repair -L /dev/dm-1
 
 参考 scripts/nix/pkg/static-qemu.nix
 
-## [] 为什么 ccls 总是在重新刷新
-
-- direnv: nix-direnv: renewed cache
-
-每次启动的时候
-
-```txt
-direnv: using nix
-direnv: nix-direnv: using cached dev shell
-```
-
-比较怀疑是和这个有关系。
 
 ## [ ] nixos 没有 centos 中对应的 kernel-tools 包
 
 类似 kvm_stat 是没有现成的包，非常难受。nixmd
-
-## [ ] localsend 无法安装
-
-因为 flutter 版本太低了。
 
 ## nixos 上无法安装 pytype
 
@@ -1417,7 +1401,7 @@ https://docs.cfw.lbyczf.com/contents/ui/profiles/rules.html
 https://nixos.wiki/wiki/Bootloader 中最后提到如何增加 efi
 
 ```sh
-efibootmgr -c -d /dev/sda -p 1 -L NixOS-boot -l '\EFI\NixOS-boot\grubx64.efi'
+efibootmgr -c -d /dev/nvme0n1 -p 1 -L NixOS-boot -l '\EFI\NixOS-boot\grubx64.efi'
 ```
 1. 注意，-p 1 来设置那个 partition 的。
 2. 后面的那个路径需要将 boot 分区 mount 然后具体产看，还有一次是设置的 "\EFI\nixo\BOOTX64.efi"
@@ -1431,6 +1415,15 @@ efiSysMountPoint = "/boot/efi"; # ← use the same mount point here.
 我设置的是 /boot 似乎影响也不大啊!
 
 不知道为什么 efibootmgr 在 home.cli 中无法安装。
+
+
+删除一个:
+```txt
+sudo efibootmgr  -B -b 3 # 3 是参数
+```
+
+设置优先级
+sudo efibootmgr -o 0,1,2
 
 ## [ ] 如何下载 nixd
 
@@ -1480,11 +1473,15 @@ https://mynixos.com/
 ## 不知道如何调试代码，debug symbol 如何加载
 - https://nixos.wiki/wiki/Debug_Symbols
 
-## [ ] sar 无法正常使用
+## [x] sar 无法正常使用
 ```txt
 🧀  sar
 Cannot open /var/log/sa/sa21: No such file or directory
 Please check if data collecting is enabled
+```
+兄弟，是这个:
+```sh
+sar -n DEV 1
 ```
 
 ## 如何在 cgroup 中编译内核
@@ -1500,7 +1497,8 @@ sudo cgexec -g memory:mem3 make -j32
 ```
 
 ## 文摘
-https://mtlynch.io/notes/nix-first-impressions/
+- [my first expression of nix](https://news.ycombinator.com/item?id=36387874_)
+  - https://mtlynch.io/notes/nix-first-impressions/
 https://news.ycombinator.com/item?id=36387874
 https://news.ycombinator.com/item?id=32922901
 
@@ -1556,3 +1554,12 @@ https://news.ycombinator.com/item?id=37818570
 ## 构建内核的确方便，但是构建过程不能利用 cacahe ，现在修改一个 patch 就要重新构建整个内核，很烦
 
 此外，现在 systemd 中构建一次之后，在 zsh 中还是需要重新 make 一次
+
+## 如何在 nixpkgs 的基础上稍作修改制作自己的包
+git clone nixpkgs
+
+跑到对应的路径下去:
+
+nix-build -E 'with import <nixpkgs> {}; callPackage ./default.nix {}'
+
+https://elatov.github.io/2022/01/building-a-nix-package/
