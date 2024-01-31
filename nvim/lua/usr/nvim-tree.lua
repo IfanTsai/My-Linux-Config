@@ -33,10 +33,6 @@ end
 require("nvim-tree").setup({
     view = {
         side = 'left',
-        mappings = {
-            custom_only = true,
-            list = keymap_list
-        }
     },
     on_attach = on_attach,
     actions = {
