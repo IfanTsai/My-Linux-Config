@@ -104,7 +104,6 @@ for s:fname in s:core_conf_files
   execute printf('source %s/vim/%s', stdpath('config'), s:fname)
 endfor
 
-colorscheme tokyonight-night
 " 在 markdown 中间编辑 table
 let g:table_mode_corner='|'
 
