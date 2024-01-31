@@ -86,6 +86,7 @@ require("aerial").setup({
     backends = {"markdown", "man", "lsp", "treesitter"},
     layout = {
         max_width = {30, 0.15},
+        width = 0.2,
         placement = "edge",
         default_direction = "right"
     },
