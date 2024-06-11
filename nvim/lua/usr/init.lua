@@ -1,6 +1,7 @@
 require("usr.options")
 require("usr.lazy")
 require("usr.lsp")
+require("usr.go")
 require("usr.cmp")
 require("usr.bufferline")
 require("usr.code_runner")

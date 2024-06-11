@@ -127,6 +127,7 @@ require("lazy").setup({
   "mattn/efm-langserver", -- 支持 bash
   "gbrlsnchs/telescope-lsp-handlers.nvim",
   "jakemason/ouroboros", -- quickly switch between header and source file in C/C++ project
+  "ray-x/go.nvim", -- feature-rich go development plugin
   -- 其他
   "ggandor/leap.nvim", -- 快速移动
   { "crusj/bookmarks.nvim", branch = "main" }, -- 书签, 存储在 ~/.local/share/nvim/bookmarks 中
