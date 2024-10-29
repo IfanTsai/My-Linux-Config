@@ -76,6 +76,7 @@ wk.register({
       h = { "<cmd>split | Ouroboros<cr>", "open file in a horizontal split"},
       v = { "<cmd>vsplit | Ouroboros<cr>", "open file in a vertical split"},
     },
+    e = { "<cmd>lua vim.diagnostic.open_float(0, {scope='line'})<cr>", "show line diagnostic"},
     f = {
       name = "+file",
       o = { "<cmd>NvimTreeFindFile<cr>", "open file in dir" },
