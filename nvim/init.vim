@@ -78,6 +78,7 @@ nmap ss <Plug>(easymotion-s2)
 set clipboard+=unnamedplus
 
 " 使用 z a 打开和关闭 fold ，打开大文件（超过 10 万行）的时候可能造成性能问题
+set foldmethod=manual
 " set foldlevelstart=99
 " set foldmethod=expr
 " set foldexpr=nvim_treesitter#foldexpr()
@@ -86,8 +87,8 @@ set clipboard+=unnamedplus
 " 如果执行的命令存在大量输出，可能卡死整个 nvim
 let g:floaterm_width = 0.7
 let g:floaterm_height = 0.7
-let g:floaterm_keymap_prev   = '<C-p>'
-let g:floaterm_keymap_new    = '<C-n>'
+let g:floaterm_keymap_prev   = '<C-k>'
+let g:floaterm_keymap_new    = '<C-j>'
 let g:floaterm_keymap_toggle = '<C-t>'
 
 " 加载 lua 配置
