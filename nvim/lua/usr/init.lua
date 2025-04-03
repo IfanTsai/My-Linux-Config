@@ -84,14 +84,33 @@ vim.api.nvim_create_autocmd({"VimLeave"}, {
 
 -- 导航栏
 require("aerial").setup({
-    backends = {"markdown", "man", "lsp", "treesitter"},
+    backends = {"markdown", "man", "treesitter", "lsp", "asciidoc"},
     layout = {
-        max_width = {30, 0.15},
-        width = 0.2,
+        max_width = {34, 0.20},
+        --width = 0.8,
         placement = "edge",
-        default_direction = "right"
+        default_direction = "right",
+        resize_to_content = true,
     },
-    attach_mode = "global"
+    attach_mode = "global",
+    show_guides = true,
+    guides = {
+        -- When the child item has a sibling below it
+        mid_item = "├─",
+        -- When the child item is the last in the list
+        last_item = "└─",
+        -- When there are nested child guides to the right
+        nested_top = "│ ",
+        -- Raw indentation
+        whitespace = "  ",
+    },
+     -- When the symbols change, resize the aerial window (within min/max constraints) to fit
+    resize_to_content = true,
+    --[[
+    manage_folds = true,
+    link_folds_to_tree = true,
+    link_tree_to_folds = true,
+    --]]
 })
 
 -- 书签
